@@ -38,7 +38,7 @@
                                 <a href="." class="nav-link active" aria-current="page">Installationsanleitung</a>
                             </li>
                             <li class="nav-item">
-                                <a href="Installationsanleitung/" class="nav-link">Installationsanleitung</a>
+                                <a href="Funktionen/" class="nav-link">Funktionen</a>
                             </li>
                             <li class="nav-item">
                                 <a href="api/" class="nav-link">Api</a>
@@ -57,7 +57,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="Installationsanleitung/" class="nav-link">
+                                <a rel="next" href="Funktionen/" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -89,27 +89,222 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="installationsanleitung">Installationsanleitung</h1>
-<p>Zur Installation von dem CMS WordPress auf einer VM oder einem Server, sollte bevorzugt Ubuntu, 
-Linux oder Debian als Betriebssystem laufen. Um mit der Einrichtung zu starten, verbindet man sich per SSH mit dem Server. 
-Für die Verbindung sollte man den Root-User oder einen Benutzer mit root-Rechten nutzen. Die Verbindung baut 
-man über folgenden Befehl auf:</p>
-<p><code>ssh benutzer@server_ip</code></p>
-<p>Nach dem erfolgreichen Verbinden mit dem Server, sollte zuerst das System aktualisiert werden. 
-Dies wird gemacht, um sicherzustellen, dass alle Pakete auf dem neusten Stand sind:</p>
-<p><code>sudo apt-get update</code>
-<code>sudo apt-get upgrade -y</code></p>
-<p>Im nächsten Schritt werden alle benötigten Pakete installiert. Dazu gehören der Webserver
-„Apache“, die Datenbank „MariaDB“ sowie PHP und alle für WordPress notwendigen PHP-
-Erweiterungen. Diese bilden die technische Grundlage für die Anwendung:</p>
-<p><code>sudo apt install apache2 mariadb-server php php-mysql libpache2-mod-php php-cli php-curl php-
-xml php-mbstring php-zip unzip curl -y</code></p>
-<p>Nachdem diese Installation durchgelaufen ist, kann sowohl der Webserver als auch die Datenbank, 
-bzw. der Datenbankserver gestartet werden. Hierbei aktiveren wir gleich, dass diese beim 
-Systemstart automatischen starten und mitlaufen:</p>
-<p><code>sudo systemctl enable apache2</code></p>
-<p><code>sudo systemctl start apache2</code></p>
-<p><code>sudo systemctl enable mariadb</code></p>
-<p><code>sudo systemctl start mariadb</code></p></div>
+<p>Zur Installation von dem CMS WordPress auf einer VM oder einem Server,
+sollte bevorzugt Ubuntu, Linux oder Debian als Betriebssystem laufen. Um
+mit der Einrichtung zu starten, verbindet man sich per SSH mit dem
+Server. Für die Verbindung sollte man den Root-User oder einen Benutzer
+mit root-Rechten nutzen. Die Verbindung baut man über folgenden Befehl
+auf:</p>
+<p><strong>ssh benutzer@server_ip</strong></p>
+<p>Nach dem erfolgreichen Verbinden mit dem Server, sollte zuerst das
+System aktualisiert werden. Dies wird gemacht, um sicherzustellen, dass
+alle Pakete auf dem neusten Stand sind:</p>
+<p><strong>sudo apt update</strong></p>
+<p><strong>sudo apt upgrade -y</strong></p>
+<p>Im nächsten Schritt werden alle benötigten Pakete installiert. Dazu
+gehören der Webserver „Apache", die Datenbank „MariaDB" sowie PHP und
+alle für WordPress notwendigen PHP-Erweiterungen. Diese bilden die
+technische Grundlage für die Anwendung:</p>
+<p><strong>sudo apt install apache2 mariadb-server php php-mysql
+libpache2-mod-php php-cli php-curl php-xml php-mbstring php-zip unzip
+curl -y</strong></p>
+<p>Nachdem diese Installation durchgelaufen ist, kann sowohl der Webserver
+als auch die Datenbank, bzw. der Datenbankserver gestartet werden.
+Hierbei aktiveren wir gleich, dass diese beim Systemstart automatischen
+starten und mitlaufen:</p>
+<p><strong>sudo systemctl enable apache2</strong></p>
+<p><strong>sudo systemctl start apache2</strong></p>
+<p><strong>sudo systemctl enable mariadb</strong></p>
+<p><strong>sudo systemctl start mariadb</strong></p>
+<p>Nun richten wir die Datenbank für WordPress ein. Dazu melden wir uns
+zuerst in der Datenbank von Mariadb an. Danach erstellen wir eine neue
+Datenbank und richten einen neuen Benutzer für WordPress ein. Dieser
+Nutzer soll zur Sicherheit nur rechte für diese Datenbank erhalten und
+keine andere.</p>
+<p><strong>sudo mysql -u root -p</strong></p>
+<p><strong>CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8mb4 COLLATE
+utf8mb4_unicode_ci;</strong></p>
+<p><strong>CREATE USER \'wpuser\'@\'localhost\'IDENTIFIED BY \'ihr eigenes
+starkes Passwort\';</strong></p>
+<p><strong>GRANT ALL PRIVILEGES ON wordpress.* TO \'wpuser\'@\'localhost\';</strong></p>
+<p><strong>FLUSH PRIVILEGES;</strong></p>
+<p><strong>EXIT;</strong></p>
+<p>Sobald dieser Schritt geschaft ist und die Datenbank damit bereit ist,
+können wir Anfangen WordPress herunterzuladen und im Webverzeichnis zu
+installieren. Dafür müssen wir zunächst in das Standard-Webverzeichnis
+von Apache wechseln:</p>
+<p><strong>cd /var/www/html</strong></p>
+<p>Danach kann angefangen werden WordPress von der offiziellen Seite
+herunterzuladen und zu entpacken:</p>
+<p><strong>sudo curl -O https://de.wordpress.org/latest-de_DE.tar.gz</strong></p>
+<p><strong>sudo tar -xvzf latest-de_DE.tar.gz</strong></p>
+<p><strong>sudo mv wordpress/* .</strong></p>
+<p><strong>sudo rm -rf wordpress latest-de_DE.tar.gz</strong></p>
+<p>Als nächstes müssen wir WordPress konfigurieren. Dafür müssen wir die
+Beispielkonfigurationsdatei kopieren, öffnen und anschließend
+bearbeiten, sodass wir die zuvor erstellen Datenbankzugangsdaten
+eintragen können:</p>
+<p><strong>sudo cp wp-config-sample.php wp-config.php</strong></p>
+<p><strong>sudo nano wp-config.php</strong></p>
+<p><strong>define(\'DB_NAME\', \'wordpress\');\
+define(\'DB_USER\', \'wpuser\');\
+define(\'DB_PASSWORD\', \'SEHR_STARKES_PASSWORT\');\
+define(\'DB_HOST\', \'localhost\');</strong></p>
+<p>Damit die Domain korrekt auf die WordPress-Installation zeigt, wird
+anschließend geprüft ob ein Virtual Host im Apache Webserver erstellt
+wurde. Dazu öffnet man die Konfigurationsdatei vom Apache Webserver:</p>
+<p><strong>sudo nano /etc/apache2/sites-available/000-default.conf</strong></p>
+<p>In dieser Datei sollte nun die Domain definiert sein und das
+WordPress-Verzeichnis als Root-Verzeichnis gesetzt werden. Wenn wie
+beschrieben WordPress in /var/www/html installiert wurde, muss das
+Root-Verzeichnis nicht mehr gesetzt werden:</p>
+<p><strong>\&lt;VirtualHost *:80&gt;\
+erverName ihre-domain.de\
+DocumentRoot /var/www/html\
+\
+ErrorLog \${APACHE_LOG_DIR}/error.log\
+CustomLog \${APACHE_LOG_DIR}/access.log combined\
+\&lt;/VirtualHost&gt;</strong></p>
+<p>Anschließend muss der Apache Server neu geladen werden um gemachte
+Änderungen zu speichern und zu laden:</p>
+<p><strong>sudo systemctl reload apache2</strong></p>
+<p>Bereits hier kann man nun versuchen das erstmal mit der Website zu
+verbinden. Sollte die Wordpress-Anmeldeseite auftauchen, so hat das
+html-Verzeichnis die bereits benötigten Rechte. Sollte dies jedoch nicht
+der Fall sein so werden anschließend die Dateirechte angepasst:</p>
+<p><strong>sudo chown -R www-data:www-data /var/www/html\
+sudo chmod -R 755 /var/www/html</strong></p>
+<p>Damit Wordpress von außen erreichbar ist, müssen die benötigten
+Netzwerkports auf dem Server oder der VM freigegeben werden. Zum einen
+müssen SSH-Zugriff erlaubt werden, um die Verbindung zum Server/VM nicht
+zu verlieren von man die Firewall aktiviert. Zudem müssen die Ports 80
+und 443 freigegeben werden.</p>
+<p>Für Ubuntu Server ist der Befehl:</p>
+<p><strong>sudo ufw allow OpenSSH\
+sudo ufw allow \'Apache Full\'</strong></p>
+<p><strong>sudo ufw enable</strong></p>
+<p>Danach kann man den Status der Firewall überprüfen, indem man <strong>sudo</strong>
+<strong>ufw status</strong> eingibt.</p>
+<p>Der Eintrag Apache Full bedeutet, dass sowohl Port 80 (HTTP) als auch
+Port 443 (HTTPS) für eingehende Verbindungen freigegeben sind. Damit
+Besucher die Webseite über einen Webbrowser erreichen können, muss
+zusätzlich ein Webserver auf diesen Ports lauschen und gegebenenfalls
+ein SSL-Zertifikat für HTTPS eingerichtet sein.</p>
+<p><strong>[SSL-Zertifikat zur Verschlüsselung]{.underline}</strong></p>
+<p>Für die Nutzung von Zertifikaten kann sowohl ein Zertifikat von anderen
+Unternehmen ausgestellt werden als auch ein selbstsigniertes Zertifikat
+verwendet werden. Ein SSL Zertifikat ist zur Verschlüsselung der
+Verbindung da. Selbstsignierte Zertifikate werden bei der Verbindung mit
+der Website automatisch von Browsern als nicht vertrauenswürdig
+eingestuft, obwohl sie wie offizielle Zertifikate verschlüsseln.
+Dementsprechend erscheint beim Verbinden auch eine Sicherheitswarnung.</p>
+<p>Um ein selbstsigniertes Zertifikat zu erstellen, nutzen wir OpenSSL. Das
+erstellt uns einen neuen privaten Schlüssel und ein selbstsigniertes
+Zertifikat:</p>
+<p><strong>sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout
+/etc/ssl/private/webshop.key -out /etc/ssl/certs/webshop.crt</strong></p>
+<p>Während der Erstellung werden einige Informationen abgefragt. Besonders
+wichtig ist der Wert für <strong>Common Name (CN)</strong>. Hier sollte die Domain
+eingetragen werden, über die die WordPress-Installation erreichbar sein
+wird, beispielsweise:</p>
+<p><strong>Common Name (CN): meine-domain.de</strong></p>
+<p>Nach erfolgreicher Erstellung befinden sich die beiden Dateien im
+Verzeichnis:</p>
+<p><strong>/etc/ssl/certs/webshop.crt\
+/etc/ssl/private/webshop.key</strong></p>
+<p>Der private Schlüssel sollte zudem ausschließlich für Root lesbar sein,
+weshalb wir diesen nochmal schützen müssen:</p>
+<p><strong>sudo chmod 600 /etc/ssl/private/webshop.key</strong></p>
+<p>Nun wird das SSL-Modul von Apache aktiviert:</p>
+<p><strong>sudo a2enmod ssl\
+sudo a2enmod rewrite</strong></p>
+<p>Anschließend wird die SSL-Konfiguration angepasst:</p>
+<p><strong>sudo nano /etc/apache2/sites-available/default-ssl.conf</strong></p>
+<p>Der nachfolgende Teil sollte in der <strong>default-ssl.conf</strong> vorhanden sein.
+Wenn teile Fehlen müssen diese hinzugefügt werden:</p>
+<p><strong>\&lt;VirtualHost *:443&gt;\
+ServerName meine-domain.de\
+\
+DocumentRoot /var/www/html\
+\
+SSLEngine on\
+SSLCertificateFile /etc/ssl/certs/webshop.crt\
+SSLCertificateKeyFile /etc/ssl/private/webshop.key\
+\
+\&lt;Directory /var/www/html&gt;\
+AllowOverride All\
+Require all granted\
+\&lt;/Directory&gt;\
+\
+ErrorLog \${APACHE_LOG_DIR}/wordpress_ssl_error.log\
+CustomLog \${APACHE_LOG_DIR}/wordpress_ssl_access.log combined\
+\&lt;/VirtualHost&gt;</strong></p>
+<p>Danach kann die Datei gespeichert und geschlossen werden. Darauf hin
+aktivieren wir auch die gerade angepasste Datei:</p>
+<p><strong>sudo a2ensite default-ssl.conf</strong></p>
+<p>Um nun Besucher automatisch von http auf HTTPS umzuleiten, muss
+zusätzlich die Konfiguration unter Port 80 angepasst werden:</p>
+<p><strong>sudo nano /etc/apache2/sites-available/000-default.conf</strong></p>
+<p><strong>\&lt;VirtualHost *:80&gt;\
+ServerName meine-domain.de\
+\
+Redirect permanent / https://meine-domain.de/\
+\&lt;/VirtualHost&gt;</strong></p>
+<p>Danach überprüfen wir die Konfiguration auf ihren Syntax. Dabei sollte
+die Meldung <strong>Syntax OK</strong> kommen:</p>
+<p><strong>sudo apache2ctl configtest</strong></p>
+<p>Anschließend können wir den Webserver neu starten und den Webserver
+unter https erreichen:</p>
+<p><strong>sudo systemctl restart apache2</strong></p>
+<p>Für Testumgebungen, interne Netzwerke oder Entwicklungsserver sind
+selbstsignierte Zertifikate meist ausreichend. Für öffentlich
+erreichbare Webseiten wird hingegen empfohlen, ein Zertifikat einer
+offiziellen Zertifizierungsstelle zu verwenden.</p>
+<p><strong>[WordPress Einrichtung und Plugins]{.underline}</strong></p>
+<p>Sobald die Installation abgeschlossen ist und die Domain korrekt auf den
+Server zeigt, kann WordPress im Browser aufgerufen werden. Dazu öffnet
+man die Domain in einem Webbrowser:</p>
+<p><strong>https://deine-domain.de</strong></p>
+<p>Beim ersten Aufruf erscheint automatisch der
+WordPress-Installationsassistent. In diesem Schritt werden grundlegende
+Informationen zur Website festgelegt, darunter der Seitentitel, ein
+Benutzername für den Administrator, ein sicheres Passwort sowie eine
+E-Mail-Adresse. Nach Abschluss dieser Einrichtung ist die Installation
+vollständig abgeschlossen.</p>
+<p>Der Login in den Administrationsbereich erfolgt anschließend über
+folgende URL:</p>
+<p><strong>https://deine-domain.de/wp-admin</strong></p>
+<p>Hier meldet man sich mit dem zuvor erstellten Admin-Benutzer und
+Passwort an. Nach erfolgreichem Login gelangt man in das
+WordPress-Dashboard, also die zentrale Verwaltungsoberfläche der
+Website.</p>
+<p>Plugins erweitern WordPress um zusätzliche Funktionen wie Sicherheit,
+SEO, Kontaktformulare oder Performance-Optimierungen. Die Installation
+erfolgt direkt im Dashboard.</p>
+<p>Nach dem Login navigiert man im linken Menü zu:</p>
+<p><strong>„Plugins → Installieren"</strong></p>
+<p><img alt="" src="media/image1.png" />{width="6.268055555555556in"
+height="3.3493055555555555in"}</p>
+<p>Im Suchfeld kann nun der Name eines gewünschten Plugins eingegeben
+werden, beispielsweise „Wordfence" für Sicherheit oder „Yoast SEO" für
+Suchmaschinenoptimierung.</p>
+<p><strong>Der Ablauf ist immer gleich:</strong></p>
+<ol>
+<li>
+<p>Plugin im Suchfeld auswählen</p>
+</li>
+<li>
+<p>Auf <strong>„Jetzt installieren"</strong> klicken</p>
+</li>
+<li>
+<p><img alt="" src="media/image2.png" />{width="6.228472222222222in"
+    height="3.3652777777777776in"}Nach erfolgreicher Installation auf
+    <strong>„Aktivieren"</strong> klicken</p>
+</li>
+</ol>
+<p>Sobald ein Plugin aktiviert ist, steht es sofort zur Verfügung und kann
+je nach Plugin über zusätzliche Menüpunkte oder Einstellungen
+konfiguriert werden.</p></div>
             </div>
         </div>
 
@@ -191,5 +386,5 @@ Systemstart automatischen starten und mitlaufen:</p>
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-06-25 14:06:41.331344+00:00
+Build Date UTC : 2026-06-25 14:13:46.336699+00:00
 -->
