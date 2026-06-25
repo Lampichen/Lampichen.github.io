@@ -83,6 +83,16 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#ssl-zertifikat-zur-verschlusselung" class="nav-link">SSL-Zertifikat zur Verschlüsselung</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#wordpress-einrichtung-und-plugins" class="nav-link">WordPress Einrichtung und Plugins</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
         </ul>
     </div>
 </div></div>
@@ -124,9 +134,8 @@ keine andere.</p>
 <p><strong>sudo mysql -u root -p</strong></p>
 <p><strong>CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8mb4 COLLATE
 utf8mb4_unicode_ci;</strong></p>
-<p><strong>CREATE USER \'wpuser\'@\'localhost\'IDENTIFIED BY \'ihr eigenes
-starkes Passwort\';</strong></p>
-<p><strong>GRANT ALL PRIVILEGES ON wordpress.* TO \'wpuser\'@\'localhost\';</strong></p>
+<p><strong>CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'ihr eigenes starkes Passwort';</strong></p>
+<p><strong>GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost';</strong></p>
 <p><strong>FLUSH PRIVILEGES;</strong></p>
 <p><strong>EXIT;</strong></p>
 <p>Sobald dieser Schritt geschaft ist und die Datenbank damit bereit ist,
@@ -146,10 +155,10 @@ bearbeiten, sodass wir die zuvor erstellen Datenbankzugangsdaten
 eintragen können:</p>
 <p><strong>sudo cp wp-config-sample.php wp-config.php</strong></p>
 <p><strong>sudo nano wp-config.php</strong></p>
-<p><strong>define(\'DB_NAME\', \'wordpress\');\
-define(\'DB_USER\', \'wpuser\');\
-define(\'DB_PASSWORD\', \'SEHR_STARKES_PASSWORT\');\
-define(\'DB_HOST\', \'localhost\');</strong></p>
+<p><strong>define('DB_NAME', 'wordpress');</strong>\
+<strong>define('DB_USER', 'wpuser');</strong>\
+<strong>define('DB_PASSWORD', 'SEHR_STARKES_PASSWORT');</strong>\
+<strong>define('DB_HOST', 'localhost');</strong></p>
 <p>Damit die Domain korrekt auf die WordPress-Installation zeigt, wird
 anschließend geprüft ob ein Virtual Host im Apache Webserver erstellt
 wurde. Dazu öffnet man die Konfigurationsdatei vom Apache Webserver:</p>
@@ -158,12 +167,12 @@ wurde. Dazu öffnet man die Konfigurationsdatei vom Apache Webserver:</p>
 WordPress-Verzeichnis als Root-Verzeichnis gesetzt werden. Wenn wie
 beschrieben WordPress in /var/www/html installiert wurde, muss das
 Root-Verzeichnis nicht mehr gesetzt werden:</p>
-<p><strong>\&lt;VirtualHost *:80&gt;\
-serverName ihre-domain.de\
-DocumentRoot /var/www/html\
+<p><strong><VirtualHost \*:80>\
+    serverName ihre-domain.de\
+    DocumentRoot /var/www/html\
 \
-ErrorLog \${APACHE_LOG_DIR}/error.log\
-CustomLog \${APACHE_LOG_DIR}/access.log combined\
+    ErrorLog \${APACHE_LOG_DIR}/error.log\
+    CustomLog \${APACHE_LOG_DIR}/access.log combined\
 \&lt;/VirtualHost&gt;</strong></p>
 <p>Anschließend muss der Apache Server neu geladen werden um gemachte
 Änderungen zu speichern und zu laden:</p>
@@ -190,7 +199,7 @@ Port 443 (HTTPS) für eingehende Verbindungen freigegeben sind. Damit
 Besucher die Webseite über einen Webbrowser erreichen können, muss
 zusätzlich ein Webserver auf diesen Ports lauschen und gegebenenfalls
 ein SSL-Zertifikat für HTTPS eingerichtet sein.</p>
-<p><strong>[SSL-Zertifikat zur Verschlüsselung]{.underline}</strong></p>
+<h1 id="ssl-zertifikat-zur-verschlusselung">SSL-Zertifikat zur Verschlüsselung</h1>
 <p>Für die Nutzung von Zertifikaten kann sowohl ein Zertifikat von anderen
 Unternehmen ausgestellt werden als auch ein selbstsigniertes Zertifikat
 verwendet werden. Ein SSL Zertifikat ist zur Verschlüsselung der
@@ -248,7 +257,7 @@ zusätzlich die Konfiguration unter Port 80 angepasst werden:</p>
 <p><strong>\&lt;VirtualHost *:80&gt;\
 ServerName meine-domain.de\
 \
-Redirect permanent / https://meine-domain.de/\
+Redirect permanent / https://meine-domain.de/ \
 \&lt;/VirtualHost&gt;</strong></p>
 <p>Danach überprüfen wir die Konfiguration auf ihren Syntax. Dabei sollte
 die Meldung <strong>Syntax OK</strong> kommen:</p>
@@ -260,7 +269,7 @@ unter https erreichen:</p>
 selbstsignierte Zertifikate meist ausreichend. Für öffentlich
 erreichbare Webseiten wird hingegen empfohlen, ein Zertifikat einer
 offiziellen Zertifizierungsstelle zu verwenden.</p>
-<p><strong>[WordPress Einrichtung und Plugins]{.underline}</strong></p>
+<h1 id="wordpress-einrichtung-und-plugins">WordPress Einrichtung und Plugins</h1>
 <p>Sobald die Installation abgeschlossen ist und die Domain korrekt auf den
 Server zeigt, kann WordPress im Browser aufgerufen werden. Dazu öffnet
 man die Domain in einem Webbrowser:</p>
@@ -283,7 +292,7 @@ SEO, Kontaktformulare oder Performance-Optimierungen. Die Installation
 erfolgt direkt im Dashboard.</p>
 <p>Nach dem Login navigiert man im linken Menü zu:</p>
 <p><strong>„Plugins → Installieren"</strong></p>
-<p><img alt="img.png" src="bilder/img.png" /></p>
+<p><img alt="img.png" src="media/img.png" /></p>
 <p>Im Suchfeld kann nun der Name eines gewünschten Plugins eingegeben
 werden, beispielsweise „Wordfence" für Sicherheit oder „Yoast SEO" für
 Suchmaschinenoptimierung.</p>
@@ -296,7 +305,7 @@ Suchmaschinenoptimierung.</p>
 <p>Auf <strong>„Jetzt installieren"</strong> klicken</p>
 </li>
 </ol>
-<p><img alt="img2" src="bilder/img2.png" /></p>
+<p><img alt="img2" src="media/img2.png" /></p>
 <p>Nach erfolgreicher Installation auf
     <strong>„Aktivieren"</strong> klicken</p>
 <p>Sobald ein Plugin aktiviert ist, steht es sofort zur Verfügung und kann
@@ -383,5 +392,5 @@ konfiguriert werden.</p></div>
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-06-25 15:05:55.243913+00:00
+Build Date UTC : 2026-06-25 16:28:28.294786+00:00
 -->
