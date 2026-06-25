@@ -178,12 +178,12 @@ wurde. Dazu öffnet man die Konfigurationsdatei vom Apache Webserver:</p>
 WordPress-Verzeichnis als Root-Verzeichnis gesetzt werden. Wenn wie
 beschrieben WordPress in /var/www/html installiert wurde, muss das
 Root-Verzeichnis nicht mehr gesetzt werden:</p>
-<p><strong><VirtualHost \*:80></strong>
-    <strong>serverName ihre-domain.de</strong>
-    <strong>DocumentRoot /var/www/html</strong>
-    <strong>ErrorLog \${APACHE_LOG_DIR}/error.log</strong>
-    <strong>CustomLog \${APACHE_LOG_DIR}/access.log combined</strong>
-<strong></VirtualHost></strong></p>
+<p><code>&lt;VirtualHost \*:80&gt;
+    serverName ihre-domain.de
+    DocumentRoot /var/www/html
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+&lt;/VirtualHost&gt;</code></p>
 <p>Anschließend muss der Apache Server neu geladen werden um gemachte
 Änderungen zu speichern und zu laden:</p>
 <p><strong>sudo systemctl reload apache2</strong></p>
@@ -241,25 +241,25 @@ weshalb wir diesen nochmal schützen müssen:</p>
 <p><strong>sudo nano /etc/apache2/sites-available/default-ssl.conf</strong></p>
 <p>Der nachfolgende Teil sollte in der <strong>default-ssl.conf</strong> vorhanden sein.
 Wenn Teile Fehlen, müssen diese hinzugefügt werden:</p>
-<p><strong>\&lt;VirtualHost *:443&gt;</strong></p>
-<p><strong>ServerName meine-domain.de</strong></p>
-<p><strong>DocumentRoot /var/www/html</strong></p>
-<p><strong>SSLEngine on</strong></p>
-<p><strong>SSLCertificateFile /etc/ssl/certs/webshop.crt</strong></p>
-<p><strong>SSLCertificateKeyFile /etc/ssl/private/webshop.key</strong></p>
-<p><strong>ErrorLog \${APACHE_LOG_DIR}/wordpress_ssl_error.log</strong></p>
-<p><strong>CustomLog \${APACHE_LOG_DIR}/wordpress_ssl_access.log combined</strong></p>
-<p><strong></VirtualHost></strong></p>
+<p><code>&lt;VirtualHost \*:443&gt;
+    ServerName meine-domain.de
+    DocumentRoot /var/www/html
+    SSLEngine on
+    SSLCertificateFile /etc/ssl/certs/webshop.crt
+    SSLCertificateKeyFile /etc/ssl/private/webshop.key
+    ErrorLog \${APACHE_LOG_DIR}/wordpress_ssl_error.log
+    CustomLog \${APACHE_LOG_DIR}/wordpress_ssl_access.log combined
+&lt;/VirtualHost&gt;</code></p>
 <p>Danach kann die Datei gespeichert und geschlossen werden. Daraufhin
 aktivieren wir auch die gerade angepasste Datei:</p>
 <p><strong>sudo a2ensite default-ssl.conf</strong></p>
 <p>Um nun Besucher automatisch von http auf HTTPS umzuleiten, muss
 zusätzlich die Konfiguration unter Port 80 angepasst werden:</p>
 <p><strong>sudo nano /etc/apache2/sites-available/000-default.conf</strong></p>
-<p><strong><VirtualHost \*:80></strong></p>
-<p><strong>ServerName meine-domain.de</strong></p>
-<p><strong>Redirect permanent / https://meine-domain.de/</strong></p>
-<p><strong></VirtualHost></strong></p>
+<p><code>&lt;VirtualHost \*:80&gt;
+    ServerName meine-domain.de 
+    Redirect permanent / https://meine-domain.de/
+&lt;/VirtualHost&gt;</code></p>
 <p>Danach überprüfen wir die Konfiguration auf ihren Syntax. Dabei sollte
 die Meldung <strong>Syntax OK</strong> kommen:</p>
 <p><strong>sudo apache2ctl configtest</strong></p>
@@ -393,5 +393,5 @@ konfiguriert werden.</p></div>
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-06-25 18:21:37.839766+00:00
+Build Date UTC : 2026-06-25 18:27:21.228284+00:00
 -->
