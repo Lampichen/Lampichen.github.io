@@ -3,36 +3,54 @@ Docs zur Wordpress Seite
 
 
 Installationsanleitung
+
 Zur Installation von dem CMS WordPress auf einer VM oder einem Server, sollte bevorzugt Ubuntu, Linux oder Debian als Betriebssystem laufen. Um mit der Einrichtung zu starten, verbindet man sich per SSH mit dem Server. Für die Verbindung sollte man den Root-User oder einen Benutzer mit root-Rechten nutzen. Die Verbindung baut man über folgenden Befehl auf:
+
 ssh benutzer@server_ip
+
 Nach dem erfolgreichen Verbinden mit dem Server, sollte zuerst das System aktualisiert werden. Dies wird gemacht, um sicherzustellen, dass alle Pakete auf dem neusten Stand sind:
+
 sudo apt update
 sudo apt upgrade -y
+
+
 Im nächsten Schritt werden alle benötigten Pakete installiert. Dazu gehören der Webserver „Apache“, die Datenbank „MariaDB“ sowie PHP und alle für WordPress notwendigen PHP-Erweiterungen. Diese bilden die technische Grundlage für die Anwendung:
 sudo apt install apache2 mariadb-server php php-mysql libpache2-mod-php php-cli php-curl php-xml php-mbstring php-zip unzip curl -y
 Nachdem diese Installation durchgelaufen ist, kann sowohl der Webserver als auch die Datenbank, bzw. der Datenbankserver gestartet werden. Hierbei aktiveren wir gleich, dass diese beim Systemstart automatischen starten und mitlaufen:
+
+
 sudo systemctl enable apache2
 sudo systemctl start apache2
 sudo systemctl enable mariadb
 sudo systemctl start mariadb
+
+
 Nun richten wir die Datenbank für WordPress ein. Dazu melden wir uns zuerst in der Datenbank von Mariadb an. Danach erstellen wir eine neue Datenbank und richten einen neuen Benutzer für WordPress ein. Dieser Nutzer soll zur Sicherheit nur rechte für diese Datenbank erhalten und keine andere.
+
 sudo mysql -u root -p
+
 CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'wpuser'@'localhost'IDENTIFIED BY 'ihr eigenes starkes Passwort';
 GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
+
+
 Sobald dieser Schritt geschaft ist und die Datenbank damit bereit ist, können wir Anfangen WordPress herunterzuladen und im Webverzeichnis zu installieren. Dafür müssen wir zunächst in das Standard-Webverzeichnis von Apache wechseln:
+
 cd /var/www/html
+
+
 Danach kann angefangen werden WordPress von der offiziellen Seite herunterzuladen und zu entpacken:
-DROP USER ‘wp_user‘@‘localhost‘;
-FLUSH PRIVILEGES;
-EXIT;
+
 sudo curl -O https://de.wordpress.org/latest-de_DE.tar.gz
 sudo tar -xvzf latest-de_DE.tar.gz
 sudo mv wordpress/* .
 sudo rm -rf wordpress latest-de_DE.tar.gz
+
+
 Als nächstes müssen wir WordPress konfigurieren. Dafür müssen wir die Beispielkonfigurationsdatei kopieren, öffnen und anschließend bearbeiten, sodass wir die zuvor erstellen Datenbankzugangsdaten eintragen können:
+
 sudo cp wp-config-sample.php wp-config.php
 sudo nano wp-config.php
 
@@ -40,9 +58,15 @@ define('DB_NAME', 'wordpress');
 define('DB_USER', 'wpuser');
 define('DB_PASSWORD', 'SEHR_STARKES_PASSWORT');
 define('DB_HOST', 'localhost');
+
+
 Damit die Domain korrekt auf die WordPress-Installation zeigt, wird anschließend geprüft ob ein Virtual Host im Apache Webserver erstellt wurde. Dazu öffnet man die Konfigurationsdatei vom Apache Webserver:
+
 sudo nano /etc/apache2/sites-available/000-default.conf
+
+
 In dieser Datei sollte nun die Domain definiert sein und das WordPress-Verzeichnis als Root-Verzeichnis gesetzt werden. Wenn wie beschrieben WordPress in /var/www/html installiert wurde, muss das Root-Verzeichnis nicht mehr gesetzt werden:
+
 <VirtualHost *:80>
     ServerName ihre-domain.de
     DocumentRoot /var/www/html
@@ -50,16 +74,26 @@ In dieser Datei sollte nun die Domain definiert sein und das WordPress-Verzeichn
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
+
+
 Anschließend muss der Apache Server neu geladen werden um gemachte Änderungen zu speichern und zu laden:
+
 sudo systemctl reload apache2
+
 Bereits hier kann man nun versuchen das erstmal mit der Website zu verbinden. Sollte die Wordpress-Anmeldeseite auftauchen, so hat das html-Verzeichnis die bereits benötigten Rechte. Sollte dies jedoch nicht der Fall sein so werden anschließend die Dateirechte angepasst:
+
 sudo chown -R www-data:www-data /var/www/html
 sudo chmod -R 755 /var/www/html
+
 Damit Wordpress von außen erreichbar ist, müssen die benötigten Netzwerkports auf dem Server oder der VM freigegeben werden. Zum einen müssen SSH-Zugriff erlaubt werden, um die Verbindung zum Server/VM nicht zu verlieren von man die Firewall aktiviert. Zudem müssen die Ports 80 und 443 freigegeben werden.
+
 Für Ubuntu Server ist der Befehl:
+
 sudo ufw allow OpenSSH
 sudo ufw allow 'Apache Full'
 sudo ufw enable
+
+
 Danach kann man den Status der Firewall überprüfen, indem man sudo ufw status eingibt.
 Der Eintrag Apache Full bedeutet, dass sowohl Port 80 (HTTP) als auch Port 443 (HTTPS) für eingehende Verbindungen freigegeben sind. Damit Besucher die Webseite über einen Webbrowser erreichen können, muss zusätzlich ein Webserver auf diesen Ports lauschen und gegebenenfalls ein SSL-Zertifikat für HTTPS eingerichtet sein.
 
