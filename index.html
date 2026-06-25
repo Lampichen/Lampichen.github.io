@@ -104,8 +104,10 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="intro">Intro</h1>
-<p>Die Dokumentation wurde auf 3 Seiten verteilt.\
+<p>Die Dokumentation wurde auf 3 Seiten verteilt.
 Jede Seite ist über oben rechts dem Pfeil erreichbar oder auch oben in der Navigationsliste.</p>
+<p>Jedes Gruppenmitglied hat zu gleichen Anteilen an der Erarbeitung beigetragen. Da Rieke nicht vorträgt hat sie mehr Arbeit in der Dokumentation übernommen, sodass alles wieder ausgeglichen ist.
+Die lebendige Dokumentation ist unter dem Link https://lampichen.github.io zu erreichen.</p>
 <h1 id="installationsanleitung">Installationsanleitung</h1>
 <p>Zur Installation von dem CMS WordPress auf einer VM oder einem Server,
 sollte bevorzugt Ubuntu, Linux oder Debian als Betriebssystem laufen. Um
@@ -128,7 +130,7 @@ libpache2-mod-php php-cli php-curl php-xml php-mbstring php-zip unzip
 curl -y</strong></p>
 <p>Nachdem diese Installation durchgelaufen ist, kann sowohl der Webserver
 als auch die Datenbank, bzw. der Datenbankserver gestartet werden.
-Hierbei aktiveren wir gleich, dass diese beim Systemstart automatischen
+Hierbei aktivieren wir gleich, dass diese beim Systemstart automatisch
 starten und mitlaufen:</p>
 <p><strong>sudo systemctl enable apache2</strong></p>
 <p><strong>sudo systemctl start apache2</strong></p>
@@ -137,7 +139,7 @@ starten und mitlaufen:</p>
 <p>Nun richten wir die Datenbank für WordPress ein. Dazu melden wir uns
 zuerst in der Datenbank von Mariadb an. Danach erstellen wir eine neue
 Datenbank und richten einen neuen Benutzer für WordPress ein. Dieser
-Nutzer soll zur Sicherheit nur rechte für diese Datenbank erhalten und
+Nutzer soll zur Sicherheit nur Rechte für diese Datenbank erhalten und
 keine andere.</p>
 <p><strong>sudo mysql -u root -p</strong></p>
 <p><strong>CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8mb4 COLLATE
@@ -146,8 +148,8 @@ utf8mb4_unicode_ci;</strong></p>
 <p><strong>GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost';</strong></p>
 <p><strong>FLUSH PRIVILEGES;</strong></p>
 <p><strong>EXIT;</strong></p>
-<p>Sobald dieser Schritt geschaft ist und die Datenbank damit bereit ist,
-können wir Anfangen WordPress herunterzuladen und im Webverzeichnis zu
+<p>Sobald dieser Schritt geschafft ist und die Datenbank damit bereit ist,
+können wir anfangen WordPress herunterzuladen und im Webverzeichnis zu
 installieren. Dafür müssen wir zunächst in das Standard-Webverzeichnis
 von Apache wechseln:</p>
 <p><strong>cd /var/www/html</strong></p>
@@ -159,14 +161,14 @@ herunterzuladen und zu entpacken:</p>
 <p><strong>sudo rm -rf wordpress latest-de_DE.tar.gz</strong></p>
 <p>Als nächstes müssen wir WordPress konfigurieren. Dafür müssen wir die
 Beispielkonfigurationsdatei kopieren, öffnen und anschließend
-bearbeiten, sodass wir die zuvor erstellen Datenbankzugangsdaten
+bearbeiten, sodass wir die zuvor erstellten Datenbankzugangsdaten
 eintragen können:</p>
 <p><strong>sudo cp wp-config-sample.php wp-config.php</strong></p>
 <p><strong>sudo nano wp-config.php</strong></p>
-<p><strong>define('DB_NAME', 'wordpress');</strong>\
-<strong>define('DB_USER', 'wpuser');</strong>\
-<strong>define('DB_PASSWORD', 'SEHR_STARKES_PASSWORT');</strong>\
-<strong>define('DB_HOST', 'localhost');</strong></p>
+<p><strong>define('DB_NAME', 'wordpress');</strong></p>
+<p><strong>define('DB_USER', 'wpuser');</strong></p>
+<p><strong>define('DB_PASSWORD', 'SEHR_STARKES_PASSWORT');</strong></p>
+<p><strong>define('DB_HOST', 'localhost');</strong></p>
 <p>Damit die Domain korrekt auf die WordPress-Installation zeigt, wird
 anschließend geprüft ob ein Virtual Host im Apache Webserver erstellt
 wurde. Dazu öffnet man die Konfigurationsdatei vom Apache Webserver:</p>
@@ -188,7 +190,7 @@ Root-Verzeichnis nicht mehr gesetzt werden:</p>
 <p>Bereits hier kann man nun versuchen das erstmal mit der Website zu
 verbinden. Sollte die Wordpress-Anmeldeseite auftauchen, so hat das
 html-Verzeichnis die bereits benötigten Rechte. Sollte dies jedoch nicht
-der Fall sein so werden anschließend die Dateirechte angepasst:</p>
+der Fall sein, so werden anschließend die Dateirechte angepasst:</p>
 <p><strong>sudo chown -R www-data:www-data /var/www/html\
 sudo chmod -R 755 /var/www/html</strong></p>
 <p>Damit Wordpress von außen erreichbar ist, müssen die benötigten
@@ -238,7 +240,7 @@ sudo a2enmod rewrite</strong></p>
 <p>Anschließend wird die SSL-Konfiguration angepasst:</p>
 <p><strong>sudo nano /etc/apache2/sites-available/default-ssl.conf</strong></p>
 <p>Der nachfolgende Teil sollte in der <strong>default-ssl.conf</strong> vorhanden sein.
-Wenn teile Fehlen müssen diese hinzugefügt werden:</p>
+Wenn Teile Fehlen, müssen diese hinzugefügt werden:</p>
 <p><strong>\&lt;VirtualHost *:443&gt;\
 ServerName meine-domain.de\
 \
@@ -256,7 +258,7 @@ Require all granted\
 ErrorLog \${APACHE_LOG_DIR}/wordpress_ssl_error.log\
 CustomLog \${APACHE_LOG_DIR}/wordpress_ssl_access.log combined\
 \&lt;/VirtualHost&gt;</strong></p>
-<p>Danach kann die Datei gespeichert und geschlossen werden. Darauf hin
+<p>Danach kann die Datei gespeichert und geschlossen werden. Daraufhin
 aktivieren wir auch die gerade angepasste Datei:</p>
 <p><strong>sudo a2ensite default-ssl.conf</strong></p>
 <p>Um nun Besucher automatisch von http auf HTTPS umzuleiten, muss
@@ -400,5 +402,5 @@ konfiguriert werden.</p></div>
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-06-25 16:31:39.500446+00:00
+Build Date UTC : 2026-06-25 17:50:18.466021+00:00
 -->

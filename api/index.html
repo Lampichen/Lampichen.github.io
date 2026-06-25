@@ -132,7 +132,7 @@ anderen Bestellungen ignoriert werden.</p>
 <p>Wurde also der passende Kauf gefunden, werden Kundendaten aus dem
 JSON-Format extrahiert. Wichtig sind hierbei die E-Mail-Adresse sowie
 Vor- und Nachname. Diese Daten werden verwendet, um einen neuen Nutzer
-im System anzulegen, auf den der Kunde dann später zugriefen kann. Wird
+im System anzulegen, auf den der Kunde dann später zugreifen kann. Wird
 danach versucht das Kundenkonto anzulegen, so wird zuerst geprüft, ob
 der Account bereits existiert, sodass nicht doppelte Accounts vorhanden
 sind.</p>
@@ -148,7 +148,7 @@ esc_html(\$email) . \'\&lt;/p&gt;\';</strong></p>
 der E-Mail erstellt und ein Passwort generiert. Anschließend wird über
 die WordPress Funktion das Konto erstellt.</p>
 <p><strong>\$user_id = wp_create_user(\$username, \$password, \$email);</strong></p>
-<p>Im Anschluss daran, wird dem Benutzer eine E-Mail zugesendet, welches
+<p>Im Anschluss daran, wird dem Benutzer eine E-Mail zugesendet, welche
 die Zugangsdaten zur Academy beinhaltet. Der Versand erfolgt über die
 interne WordPress Mailfunktion und stellt damit unmittelbar nach dem
 Kauf sicher, dass der Kunde Zugriff auf die Website hat.</p>
