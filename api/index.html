@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Api - Auswahl und Anpassung von IT Diensten</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Auswahl und Anpassung von IT Diensten</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href=".." class="nav-link">Installationsanleitung</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../Installationsanleitung/" class="nav-link">Installationsanleitung</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">Api</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../Installationsanleitung/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<p><strong>[Installationsanleitung]{.underline}</strong></p>
+<p>Zur Installation von dem CMS WordPress auf einer VM oder einem Server,
+sollte bevorzugt Ubuntu, Linux oder Debian als Betriebssystem laufen. Um
+mit der Einrichtung zu starten, verbindet man sich per SSH mit dem
+Server. Für die Verbindung sollte man den Root-User oder einen Benutzer
+mit root-Rechten nutzen. Die Verbindung baut man über folgenden Befehl
+auf:</p>
+<p><strong>ssh benutzer@server_ip</strong></p>
+<p>Nach dem erfolgreichen Verbinden mit dem Server, sollte zuerst das
+System aktualisiert werden. Dies wird gemacht, um sicherzustellen, dass
+alle Pakete auf dem neusten Stand sind:</p>
+<p><strong>sudo apt update</strong></p>
+<p><strong>sudo apt upgrade -y</strong></p>
+<p>Im nächsten Schritt werden alle benötigten Pakete installiert. Dazu
+gehören der Webserver „Apache", die Datenbank „MariaDB" sowie PHP und
+alle für WordPress notwendigen PHP-Erweiterungen. Diese bilden die
+technische Grundlage für die Anwendung:</p>
+<p><strong>sudo apt install apache2 mariadb-server php php-mysql
+libpache2-mod-php php-cli php-curl php-xml php-mbstring php-zip unzip
+curl -y</strong></p>
+<p>Nachdem diese Installation durchgelaufen ist, kann sowohl der Webserver
+als auch die Datenbank, bzw. der Datenbankserver gestartet werden.
+Hierbei aktiveren wir gleich, dass diese beim Systemstart automatischen
+starten und mitlaufen:</p>
+<p><strong>sudo systemctl enable apache2</strong></p>
+<p><strong>sudo systemctl start apache2</strong></p>
+<p><strong>sudo systemctl enable mariadb</strong></p>
+<p><strong>sudo systemctl start mariadb</strong></p>
+<p>Nun richten wir die Datenbank für WordPress ein. Dazu melden wir uns
+zuerst in der Datenbank von Mariadb an. Danach erstellen wir eine neue
+Datenbank und richten einen neuen Benutzer für WordPress ein. Dieser
+Nutzer soll zur Sicherheit nur rechte für diese Datenbank erhalten und
+keine andere.</p>
+<p><strong>sudo mysql -u root -p</strong></p>
+<p><strong>CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8mb4 COLLATE
+utf8mb4_unicode_ci;</strong></p>
+<p><strong>CREATE USER \'wpuser\'@\'localhost\'IDENTIFIED BY \'ihr eigenes
+starkes Passwort\';</strong></p>
+<p><strong>GRANT ALL PRIVILEGES ON wordpress.* TO \'wpuser\'@\'localhost\';</strong></p>
+<p><strong>FLUSH PRIVILEGES;</strong></p>
+<p><strong>EXIT;</strong></p>
+<p>Sobald dieser Schritt geschaft ist und die Datenbank damit bereit ist,
+können wir Anfangen WordPress herunterzuladen und im Webverzeichnis zu
+installieren. Dafür müssen wir zunächst in das Standard-Webverzeichnis
+von Apache wechseln:</p>
+<p><strong>cd /var/www/html</strong></p>
+<p>Danach kann angefangen werden WordPress von der offiziellen Seite
+herunterzuladen und zu entpacken:</p>
+<p><strong>sudo curl -O https://de.wordpress.org/latest-de_DE.tar.gz</strong></p>
+<p><strong>sudo tar -xvzf latest-de_DE.tar.gz</strong></p>
+<p><strong>sudo mv wordpress/* .</strong></p>
+<p><strong>sudo rm -rf wordpress latest-de_DE.tar.gz</strong></p>
+<p>Als nächstes müssen wir WordPress konfigurieren. Dafür müssen wir die
+Beispielkonfigurationsdatei kopieren, öffnen und anschließend
+bearbeiten, sodass wir die zuvor erstellen Datenbankzugangsdaten
+eintragen können:</p>
+<p><strong>sudo cp wp-config-sample.php wp-config.php</strong></p>
+<p><strong>sudo nano wp-config.php</strong></p>
+<p><strong>define(\'DB_NAME\', \'wordpress\');\
+define(\'DB_USER\', \'wpuser\');\
+define(\'DB_PASSWORD\', \'SEHR_STARKES_PASSWORT\');\
+define(\'DB_HOST\', \'localhost\');</strong></p>
+<p>Damit die Domain korrekt auf die WordPress-Installation zeigt, wird
+anschließend geprüft ob ein Virtual Host im Apache Webserver erstellt
+wurde. Dazu öffnet man die Konfigurationsdatei vom Apache Webserver:</p>
+<p><strong>sudo nano /etc/apache2/sites-available/000-default.conf</strong></p>
+<p>In dieser Datei sollte nun die Domain definiert sein und das
+WordPress-Verzeichnis als Root-Verzeichnis gesetzt werden. Wenn wie
+beschrieben WordPress in /var/www/html installiert wurde, muss das
+Root-Verzeichnis nicht mehr gesetzt werden:</p>
+<p><strong>\&lt;VirtualHost *:80&gt;\
+ServerName ihre-domain.de\
+DocumentRoot /var/www/html\
+\
+ErrorLog \${APACHE_LOG_DIR}/error.log\
+CustomLog \${APACHE_LOG_DIR}/access.log combined\
+\&lt;/VirtualHost&gt;</strong></p>
+<p>Anschließend muss der Apache Server neu geladen werden um gemachte
+Änderungen zu speichern und zu laden:</p>
+<p><strong>sudo systemctl reload apache2</strong></p>
+<p>Bereits hier kann man nun versuchen das erstmal mit der Website zu
+verbinden. Sollte die Wordpress-Anmeldeseite auftauchen, so hat das
+html-Verzeichnis die bereits benötigten Rechte. Sollte dies jedoch nicht
+der Fall sein so werden anschließend die Dateirechte angepasst:</p>
+<p><strong>sudo chown -R www-data:www-data /var/www/html\
+sudo chmod -R 755 /var/www/html</strong></p>
+<p>Damit Wordpress von außen erreichbar ist, müssen die benötigten
+Netzwerkports auf dem Server oder der VM freigegeben werden. Zum einen
+müssen SSH-Zugriff erlaubt werden, um die Verbindung zum Server/VM nicht
+zu verlieren von man die Firewall aktiviert. Zudem müssen die Ports 80
+und 443 freigegeben werden.</p>
+<p>Für Ubuntu Server ist der Befehl:</p>
+<p><strong>sudo ufw allow OpenSSH\
+sudo ufw allow \'Apache Full\'</strong></p>
+<p><strong>sudo ufw enable</strong></p>
+<p>Danach kann man den Status der Firewall überprüfen, indem man <strong>sudo</strong>
+<strong>ufw status</strong> eingibt.</p>
+<p>Der Eintrag Apache Full bedeutet, dass sowohl Port 80 (HTTP) als auch
+Port 443 (HTTPS) für eingehende Verbindungen freigegeben sind. Damit
+Besucher die Webseite über einen Webbrowser erreichen können, muss
+zusätzlich ein Webserver auf diesen Ports lauschen und gegebenenfalls
+ein SSL-Zertifikat für HTTPS eingerichtet sein.</p>
+<p><strong>[SSL-Zertifikat zur Verschlüsselung]{.underline}</strong></p>
+<p>Für die Nutzung von Zertifikaten kann sowohl ein Zertifikat von anderen
+Unternehmen ausgestellt werden als auch ein selbstsigniertes Zertifikat
+verwendet werden. Ein SSL Zertifikat ist zur Verschlüsselung der
+Verbindung da. Selbstsignierte Zertifikate werden bei der Verbindung mit
+der Website automatisch von Browsern als nicht vertrauenswürdig
+eingestuft, obwohl sie wie offizielle Zertifikate verschlüsseln.
+Dementsprechend erscheint beim Verbinden auch eine Sicherheitswarnung.</p>
+<p>Um ein selbstsigniertes Zertifikat zu erstellen, nutzen wir OpenSSL. Das
+erstellt uns einen neuen privaten Schlüssel und ein selbstsigniertes
+Zertifikat:</p>
+<p><strong>sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout
+/etc/ssl/private/webshop.key -out /etc/ssl/certs/webshop.crt</strong></p>
+<p>Während der Erstellung werden einige Informationen abgefragt. Besonders
+wichtig ist der Wert für <strong>Common Name (CN)</strong>. Hier sollte die Domain
+eingetragen werden, über die die WordPress-Installation erreichbar sein
+wird, beispielsweise:</p>
+<p><strong>Common Name (CN): meine-domain.de</strong></p>
+<p>Nach erfolgreicher Erstellung befinden sich die beiden Dateien im
+Verzeichnis:</p>
+<p><strong>/etc/ssl/certs/webshop.crt\
+/etc/ssl/private/webshop.key</strong></p>
+<p>Der private Schlüssel sollte zudem ausschließlich für Root lesbar sein,
+weshalb wir diesen nochmal schützen müssen:</p>
+<p><strong>sudo chmod 600 /etc/ssl/private/webshop.key</strong></p>
+<p>Nun wird das SSL-Modul von Apache aktiviert:</p>
+<p><strong>sudo a2enmod ssl\
+sudo a2enmod rewrite</strong></p>
+<p>Anschließend wird die SSL-Konfiguration angepasst:</p>
+<p><strong>sudo nano /etc/apache2/sites-available/default-ssl.conf</strong></p>
+<p>Der nachfolgende Teil sollte in der <strong>default-ssl.conf</strong> vorhanden sein.
+Wenn teile Fehlen müssen diese hinzugefügt werden:</p>
+<p><strong>\&lt;VirtualHost *:443&gt;\
+ServerName meine-domain.de\
+\
+DocumentRoot /var/www/html\
+\
+SSLEngine on\
+SSLCertificateFile /etc/ssl/certs/webshop.crt\
+SSLCertificateKeyFile /etc/ssl/private/webshop.key\
+\
+\&lt;Directory /var/www/html&gt;\
+AllowOverride All\
+Require all granted\
+\&lt;/Directory&gt;\
+\
+ErrorLog \${APACHE_LOG_DIR}/wordpress_ssl_error.log\
+CustomLog \${APACHE_LOG_DIR}/wordpress_ssl_access.log combined\
+\&lt;/VirtualHost&gt;</strong></p>
+<p>Danach kann die Datei gespeichert und geschlossen werden. Darauf hin
+aktivieren wir auch die gerade angepasste Datei:</p>
+<p><strong>sudo a2ensite default-ssl.conf</strong></p>
+<p>Um nun Besucher automatisch von http auf HTTPS umzuleiten, muss
+zusätzlich die Konfiguration unter Port 80 angepasst werden:</p>
+<p><strong>sudo nano /etc/apache2/sites-available/000-default.conf</strong></p>
+<p><strong>\&lt;VirtualHost *:80&gt;\
+ServerName meine-domain.de\
+\
+Redirect permanent / https://meine-domain.de/\
+\&lt;/VirtualHost&gt;</strong></p>
+<p>Danach überprüfen wir die Konfiguration auf ihren Syntax. Dabei sollte
+die Meldung <strong>Syntax OK</strong> kommen:</p>
+<p><strong>sudo apache2ctl configtest</strong></p>
+<p>Anschließend können wir den Webserver neu starten und den Webserver
+unter https erreichen:</p>
+<p><strong>sudo systemctl restart apache2</strong></p>
+<p>Für Testumgebungen, interne Netzwerke oder Entwicklungsserver sind
+selbstsignierte Zertifikate meist ausreichend. Für öffentlich
+erreichbare Webseiten wird hingegen empfohlen, ein Zertifikat einer
+offiziellen Zertifizierungsstelle zu verwenden.</p>
+<p><strong>[WordPress Einrichtung und Plugins]{.underline}</strong></p>
+<p>Sobald die Installation abgeschlossen ist und die Domain korrekt auf den
+Server zeigt, kann WordPress im Browser aufgerufen werden. Dazu öffnet
+man die Domain in einem Webbrowser:</p>
+<p><strong>https://deine-domain.de</strong></p>
+<p>Beim ersten Aufruf erscheint automatisch der
+WordPress-Installationsassistent. In diesem Schritt werden grundlegende
+Informationen zur Website festgelegt, darunter der Seitentitel, ein
+Benutzername für den Administrator, ein sicheres Passwort sowie eine
+E-Mail-Adresse. Nach Abschluss dieser Einrichtung ist die Installation
+vollständig abgeschlossen.</p>
+<p>Der Login in den Administrationsbereich erfolgt anschließend über
+folgende URL:</p>
+<p><strong>https://deine-domain.de/wp-admin</strong></p>
+<p>Hier meldet man sich mit dem zuvor erstellten Admin-Benutzer und
+Passwort an. Nach erfolgreichem Login gelangt man in das
+WordPress-Dashboard, also die zentrale Verwaltungsoberfläche der
+Website.</p>
+<p>Plugins erweitern WordPress um zusätzliche Funktionen wie Sicherheit,
+SEO, Kontaktformulare oder Performance-Optimierungen. Die Installation
+erfolgt direkt im Dashboard.</p>
+<p>Nach dem Login navigiert man im linken Menü zu:</p>
+<p><strong>„Plugins → Installieren"</strong></p>
+<p><img alt="" src="media/image1.png" />{width="6.268055555555556in"
+height="3.3493055555555555in"}</p>
+<p>Im Suchfeld kann nun der Name eines gewünschten Plugins eingegeben
+werden, beispielsweise „Wordfence" für Sicherheit oder „Yoast SEO" für
+Suchmaschinenoptimierung.</p>
+<p><strong>Der Ablauf ist immer gleich:</strong></p>
+<ol>
+<li>
+<p>Plugin im Suchfeld auswählen</p>
+</li>
+<li>
+<p>Auf <strong>„Jetzt installieren"</strong> klicken</p>
+</li>
+<li>
+<p><img alt="" src="media/image2.png" />{width="6.228472222222222in"
+    height="3.3652777777777776in"}Nach erfolgreicher Installation auf
+    <strong>„Aktivieren"</strong> klicken</p>
+</li>
+</ol>
+<p>Sobald ein Plugin aktiviert ist, steht es sofort zur Verfügung und kann
+je nach Plugin über zusätzliche Menüpunkte oder Einstellungen
+konfiguriert werden.</p>
+<p><strong>[Funktionen]{.underline}</strong></p>
+<p>Um sich einen einfachen Webshop aufzubauen, sollten folgende empfohlene
+Plugins installiert werden:</p>
+<p>Advanced Product Search For WooCommerce</p>
+<p>Complianz - Allgemeine Geschäftsbedingungen</p>
+<p>Complianz | GDPR/CCPA Cookie Consent</p>
+<p>Discount Rules for WooCommerce</p>
+<p>Erweiterte Sendungsverfolgung für WooCommerce</p>
+<p>Extended Coupon Features for WooCommerce FREE</p>
+<p>Germanized für WooCommerce</p>
+<p>Germanized für WooCommerce: Shiptastic</p>
+<p>Germanized für WooCommerce: DHL für Shiptastic</p>
+<p>PDF Invoices &amp; Packing Slips for WooCommerce</p>
+<p>Seitlicher WooCommerce-Warenkorb</p>
+<p>Ultimate Kit ( Styler ) for WPForms</p>
+<p>WooCommerce</p>
+<p>Wordfence Security</p>
+<p>WP Frontend Delete Account</p>
+<p>WP Mail SMTP</p>
+<p>WP Mail Logging</p>
+<p>WPForms Lite</p>
+<p><strong>[WooCommerce]{.underline}</strong></p>
+<p>WooCommerce ist das Hauptplugin, welches sich auf die Einrichtung eines
+Onlineshops konzentriert. WooCommerce bietet dabei grundsätzlich
+Funktionen wie Accountverwaltung, Produkte, E-Mail-Sendungen, Gutscheine
+und Übersichten.</p>
+<p>Zuallererst sollte man, bevor man mit dem Customizing von WooCommerce
+vorfährt in die Einstellungen gehen um Grundlegende Informationen
+festzulegen.</p>
+<p><img alt="" src="media/image3.png" />{width="6.268055555555556in" height="3.2125in"}</p>
+<p>Auch unter den Einstellungen von WordPress müssen Informationen
+angegeben werde, unteranderem, über welche Domain, bzw. Adresse die
+Website verfügbar sein soll.</p>
+<p><img alt="" src="media/image4.png" />{width="6.268055555555556in"
+height="3.3805555555555555in"}</p>
+<p><strong>[Produktverwaltung]{.underline}</strong></p>
+<p>Die Verwaltung der Produkte erfolgt über WooCommerce. Über den Menüpunkt
+„Produkte" unter WooCommerce können neue Artikel angelegt, bestehende
+Produkte bearbeitet oder nicht mehr benötigte Produkte entfernt werden.</p>
+<p><img alt="" src="media/image5.png" />{width="6.268055555555556in" height="3.38125in"}</p>
+<p>Beim Anlegen eines Produkts werden zunächst die grundlegenden
+Informationen wie Produktname, Beschreibung und Preis hinterlegt.
+Zusätzlich können Produktbilder hochgeladen werden, die später im Shop
+angezeigt werden. Auch kurze Produktbeschreibungen und
+Warenkorbbeschreibungen können hierbei hinzugefügt werden. Besonders
+wichtig ist die Zuordnung von Kategorien. Durch eine saubere
+Kategorisierung können Kunden Produkte leichter finden und die
+Navigation innerhalb des Shops wird deutlich verbessert. Darüber hinaus
+lassen sich Schlagwörter vergeben, die die interne Produktsuche
+unterstützen.</p>
+<p><img alt="" src="media/image6.png" />{width="6.268055555555556in"
+height="3.3354166666666667in"}</p>
+<p><img alt="" src="media/image7.png" />{width="6.268055555555556in"
+height="3.3618055555555557in"}</p>
+<p>Bei Produkten ist es wichtig zu wissen, dass ein einfaches Produkt nur
+diese eine Art anbietet. Will man also ein Produkt haben was Variable in
+Größe und/oder Farbe ist, so muss man in dem Feld, wo gerade noch
+Einfaches Produkt steht, Variables Produkt auswählen.</p>
+<p>Um die verschiedenen Varianten nun zu erzeugen, geht man zuerst in den
+Reiter Eigenschaften.</p>
+<p><img alt="" src="media/image8.png" />{width="6.268055555555556in"
+height="3.357638888888889in"}</p>
+<p>Dort kann man nun Eigenschaften hinzufügen. Wichtig ist das man bei der
+Erstellung von Eigenschaften auch das Häkchen „Für Varianten verwendet"
+ankreuzt.</p>
+<p><img alt="" src="media/image9.png" />{width="6.268055555555556in"
+height="3.395138888888889in"}</p>
+<p>Hat man das Produkt auf Variables Produkt gestellt so wird der Reiter
+Varianten angezeigt. In diesem können Varianten automatisch aus den
+Eigenschaften generiert werden. Durch das obere Feld Bulk Actions können
+dann für alle Varianten eine Eigenschaft ausgewählt bzw. bearbeitet
+werden, wie z.B. der Preis oder Lagerbestand. Hat man die verschiedenen
+Varianten und will jede davon selber tracken, z.B. wie viel noch auf
+Lager ist, so kann man das auch über <strong>Bulk Actions</strong> einstellen.
+Dementsprechend fällt dann die Verfolgung des Lagerbestanden unter dem
+Punkt Lagerbestand weg. Sobald die Lagerverwaltung aktiviert wurde,
+reduziert WooCommerce die verfügbare Menge automatisch nach jedem Kauf.
+Dadurch behält der Shop Besitzer jederzeit den Überblick über den
+verfügbaren Beständen zu jedem Artikel.</p>
+<p><img alt="" src="media/image10.png" />{width="6.268055555555556in"
+height="3.3409722222222222in"}</p>
+<p>Außerdem kann über den Reiter Lagerbestand auch eine einheitliche
+Artikelnummer festgelegt werden. Darüber können dann später die Produkte
+leichter identifizieren und finden.</p>
+<p><img alt="" src="media/image11.png" />{width="6.268055555555556in"
+height="3.345138888888889in"}</p>
+<p>Über die Reiter Allgemein, Versand, Verlinkte Artikel und erweitert kann
+man individuelle Sachen bzgl. des Produktes festlegen. Nicht nur kann
+man Mindestalter, Steuerklasse oder auch einen Hersteller angeben,
+sondern auch festlegen, ob das Produkt nur jeweils einmal pro Bestellung
+gekauft werden darf oder ob der Shop Besitzer auch Produkte zusätzlich
+empfehlen möchte.</p>
+<p>Für Kategorien, Schlagwörter, Lieferzeiten, Hersteller, Preishinweise
+und Eigenschaften kann man vorgefertigte Objekte anlegen, sodass diese
+bei der Produkterstellung ausgewählt werden können.</p>
+<p><img alt="" src="media/image12.png" />{width="3.1771423884514434in"
+height="3.9966666666666666in"}</p>
+<p>Um als Beispiel Kategorien zu erstellen, muss man dazu in den Reiter
+Kategorien unter Produkte. In diesem Punkt kann man einfach und schnell
+verschiedene Kategorien anlegen. Es können dabei auch Kategorien
+angelegt werden, welche eine Unterkategorie sind. Das Heißt, es gibt
+eine Kategorie z.B. namens Oberbekleidung und dann können dazu nochmal
+Unterkategorien, wie Pullover oder Jacke erstellt werden.</p>
+<p><img alt="" src="media/image13.png" />{width="6.268055555555556in"
+height="3.3361111111111112in"}</p>
+<p>Genau dieses Layout ist für all die anderen Unterpunkte ungefähr gleich
+aufgebaut. Es wird immer ein Name und eine Titelform abgefragt. Häufig
+wird auch eine Beschreibung angeboten, die man selbstständig für sich
+tun kann.</p>
+<p><strong>[Erweiterte Produktsuche]{.underline}</strong></p>
+<p>Um Kunden das Auffinden von Produkten zu erleichtern, wurde das Plugin
+„Advanced Product Search for WooCommerce" integriert. Während der
+Eingabe eines Suchbegriffs werden passende Produkte bereits automatisch
+vorgeschlagen. Dadurch können Besucher schneller zum gewünschten Artikel
+navigieren, ohne mehrere Kategorien durchsuchen zu müssen. Auch kann
+über die Suchleiste nach bestimmten Kategorien gefiltert werden, wie
+z.B. Pullover.</p>
+<p><img alt="" src="media/image14.png" />{width="6.268055555555556in"
+height="3.209722222222222in"}</p>
+<p>Im Hintergrund können verschiedene Einstellungen für das Plugin und der
+Suchfunktion angepasst werden. Unter anderem lässt sich festlegen, wie
+viele Ergebnisse angezeigt werden und ob Produktbilder oder Kategorien
+in den Suchvorschlägen erscheinen sollen. Die Einstellungen dafür findet
+man unter dem Reiter WooCommerce und dann Advanced Product Search.</p>
+<p><img alt="" src="media/image15.png" />{width="6.268055555555556in"
+height="3.388888888888889in"}</p>
+<p>Nicht nur können die Suchergebnisse angepasst werden, sondern auch
+stylische Optionen. Darunter fallen z.B. Optionen wie Farben oder das
+Aussehen und der Aufbau der Suchleiste.</p>
+<p><img alt="" src="media/image16.png" />{width="6.268055555555556in"
+height="3.3743055555555554in"}</p>
+<p><img alt="" src="media/image17.png" />{width="6.268055555555556in"
+height="3.3784722222222223in"}</p>
+<p><strong>[Rabattaktionen und Gutscheine]{.underline}</strong></p>
+<p>Für Marketingaktionen stehen die umfangreiche Rabattfunktionen zur
+Verfügung. Mit den Plugins „Discount Rules for WooCommerce" und
+„Extended Coupon Features for WooCommerce" können Preisnachlässe und
+Gutscheinkampagnen erstellt werden. Das Plugin „Extended Coupon Features
+for WooCommerce" hat dabei keine eigene Übersicht, sondern erweitert die
+normale Gutscheinfunktion von WooCommerce um weitere Funktionen. Um
+Einstellungen für die Discount Rules festzulegen, muss man unter dem
+Reiter WooCommerce nach Discount Rules suchen. Um Gutscheine zu Erzeugen
+muss man in den Reiter Marketing.</p>
+<p><img alt="" src="media/image18.png" />{width="6.268055555555556in"
+height="3.3847222222222224in"}</p>
+<p>Für das Plugin „Discount Rules for WooCommerce" gibt es
+Standardeinstellungen, wobei man unteranderem einstellen kann, dass die
+Discount Rules mit den normalen WooCommerce Coupons aktiviert, werden
+können.</p>
+<p><img alt="" src="media/image19.png" />{width="6.268055555555556in" height="3.3875in"}</p>
+<p>Die Rabatte können nun beispielsweise abhängig von der Bestellmenge oder
+dem Warenkorbwert vergeben werden. So kann festgelegt werden, dass
+Kunden ab drei Produkten einen Preisnachlass von zehn Prozent erhalten
+oder ab einem bestimmten Einkaufswert versandkostenfrei bestellen
+können.</p>
+<p>So sieht z.B. die Einstellung für einen Rabatt auf alle Artikel aus,
+welches über die Discount Rules Plugin gemacht wurde. Hier können z.B.
+Produkte, die Discountart oder auch ein aktiver Zeitraum für den Rabatt
+ausgewählt und festgelegt werden.</p>
+<p><img alt="" src="media/image20.png" />{width="6.268055555555556in"
+height="3.370138888888889in"}</p>
+<p>Zusätzlich können individuelle Gutscheincodes erstellt werden. Diese
+können zeitlich begrenzt oder auf bestimmte Produkte und Kategorien
+beschränkt werden. Gutscheine eignen sich besonders für Werbeaktionen
+oder saisonale Angebote.</p>
+<p><img alt="" src="media/image21.png" />{width="6.268055555555556in"
+height="3.407638888888889in"}</p>
+<p><img alt="" src="media/image22.png" />{width="6.268055555555556in" height="3.38125in"}</p>
+<p>Beim Erstellen eines Gutscheines kann zum einen durch WooCommerce und
+durch das extra Plugin ein Gutscheincode eingetragen oder generiert
+werden. Eine Beschreibung ist dabei optional. Nun kann man hier die
+Rabattart und auch den Betrag des Gutscheines Festlegen. Zudem kann nur
+ein Verfallsdatum angelegt und kein Aktivzeitraum festgelegt werden.</p>
+<p>Außerdem ist es möglich hierbei Nutzungsbeschränkungen wie
+Mindestbestellwert, bestimmte Produkte oder Kategorien, für die der
+Gutschein angelegt wird, festzulegen.</p>
+<p><img alt="" src="media/image23.png" />{width="6.268055555555556in"
+height="3.392361111111111in"}</p>
+<p>Zudem gibt es Nutzungsbeschränkungen wie ein Benutzungslimit für alle
+oder für jeweilige Benutzer. Außerdem ist es möglich, dass man
+Bedingungen an der Kasse stellt, wie z.B. das zur Einlösung eine
+bestimmte Versandmethode oder Zahlungsart ausgewählt werden muss oder
+nur eine bestimmte Nutzerrolle den Gutschein nutzen kann.</p>
+<p><img alt="" src="media/image24.png" />{width="6.268055555555556in" height="3.38125in"}</p>
+<p><img alt="" src="media/image25.png" />{width="6.268055555555556in" height="3.35625in"}</p>
+<p>Unter dem Punkt vermischtes kann man dann festlegen, dass der Gutschein
+automatisch im Warenkorb eingelöst wird oder nicht.</p>
+<p><img alt="" src="media/image26.png" />{width="6.268055555555556in"
+height="3.5416666666666665in"}</p>
+<p><strong>[Bestellungen und Versand]{.underline}</strong></p>
+<p>Sobald ein Kunde eine Bestellung aufgibt, erscheint diese automatisch im
+Reiter WooCommerce und dann Bestellungen. Dort können alle eingegangenen
+Bestellungen eingesehen und verwaltet werden.</p>
+<p><img alt="" src="media/image27.png" />{width="6.268055555555556in"
+height="3.3715277777777777in"}</p>
+<p>Innerhalb einer Bestellung sind sämtliche Kundendaten, gekaufte Produkte
+sowie Zahlungs- und Versandinformationen hinterlegt. Der
+Bearbeitungsstatus kann jederzeit angepasst werden. Typische Statuswerte
+sind „In Wartestellung", „Versendet" oder „Geliefert". Auch können die
+Versanddetails selbst angepasst werden, indem
+Sendungsverfolgungsnummern, sowohl an der rechten Seite, als auch bei
+dem Feld Sendungen eingetragen werden. Unter dem Feld Sendungen kann man
+nicht nur die Sendungsverfolgungsnummer eintragen, sondern auch den
+Status der Versendung ändern, zu z.B. „versendet" oder „geliefert".</p>
+<p><img alt="" src="media/image28.png" />{width="6.268055555555556in"
+height="3.3847222222222224in"}</p>
+<p><img alt="" src="media/image29.png" />{width="6.268055555555556in"
+height="3.376388888888889in"}</p>
+<p>Für die Versandabwicklung stehen die Erweiterungen „Germanized
+Shiptastic" sowie die DHL-Anbindung zur Verfügung. Diese stellen
+Verbindungen zu Versanddienstleister bereit, sodass Tracking zugelassen
+wird und dementsprechend eine Tracking-/Sendungsverfolgungsnummer
+angegeben werden kann. Inbegriffene Versanddienstleister in Germanized
+und den beiden Plugins ist DHL, UPS oder auch Deutsche Post.</p>
+<p>Über das Plugin „Erweiterte Sendungsverfolgung für WooCommerce" erhält
+der Kunde Zugriff auf den aktuellen Versandstatus seiner Bestellung. Die
+Trackingnummer wird direkt in den E-Mail-Benachrichtigungen angezeigt.
+Auch kann der Kunde seine Bestellung unter „Mein Konto" und dann
+Bestellungen verfolgen.</p>
+<p>Um Einstellungen direkt am Plugin vorzunehmen, muss man dazu in die
+Einstellungen des Plugins.</p>
+<p><img alt="" src="media/image30.png" />{width="6.268055555555556in"
+height="3.3520833333333333in"}</p>
+<p>Drückt man hier dann auf das Zahnrad kann man sich auch die
+Trackinginfo, welche in der E-Mail angezeigt wird, anpassen und auf
+seine Wünsche zuschneiden.</p>
+<p><img alt="" src="media/image31.png" />{width="6.268055555555556in"
+height="3.3118055555555554in"}</p>
+<p>Zudem kann man auch verschiedene Versandanbieter hinzufügen, die das
+Plugin dann unterstützt.</p>
+<p><img alt="" src="media/image32.png" />{width="6.268055555555556in"
+height="3.3652777777777776in"}</p>
+<p><strong>[Versandoptionen]{.underline}</strong></p>
+<p>Durch Germanized und der Erweiterung durch Shiptastic kann man bereits
+erste Versanddienstleister hinzufügen lassen, welche man wie im
+Versandunternehmen bei der Sendungsverfolgung oder als
+Versandunternehmen anbieten kann.</p>
+<p>Um Versandoptionen einzurichten, muss man bei WooCommerce in die
+Einstellungen gehen und in den Unterpunkt Versand.</p>
+<p><img alt="" src="media/image33.png" />{width="6.268055555555556in"
+height="3.342361111111111in"}</p>
+<p>Hier kann man nun neue Versandzonen oder -klassen hinzufügen. Mit einer
+neuen Versandzone wird eingerichtet, welche Versandarten und Regelungen
+in den angegebenen Ländern, sowie festlegen, welche Länder in der
+Versandzone zählen.</p>
+<p><img alt="" src="media/image34.png" />{width="6.268055555555556in"
+height="3.354861111111111in"}</p>
+<p>Nachdem man die Versandarten angepasst oder hinzugefügt hat, kann man
+einstellen, welcher Kartons genutzt werden sollen und unter welchen
+Bedingungen. Auch kann man allgemeine Einstellungen zu der Versandart
+vornehmen.</p>
+<p><img alt="" src="media/image35.png" />{width="6.268055555555556in" height="3.35in"}</p>
+<p><strong>[Rechnungen und Lieferscheine]{.underline}</strong></p>
+<p>Das Plugin „PDF Invoices &amp; Packing Slips for WooCommerce" erstellt
+automatisch Rechnungen und Lieferscheine für eingegangene Bestellungen.
+Die Dokumente werden als PDF generiert und können sowohl vom Shop
+Besitzer heruntergeladen als auch automatisch an den Kunden, anbei einer
+E-Mail, versendet werden oder unter „Mein Konto" und dann Bestellungen
+abgerufen werden.</p>
+<p><img alt="" src="media/image36.png" />{width="6.268055555555556in"
+height="3.3520833333333333in"}</p>
+<p>Das Firmenlogo sowie verschiedene Dokumentinformationen können
+individuell angepasst werden. Dadurch entsteht ein professionelles
+Erscheinungsbild gegenüber dem Kunden. Die Einstellungen selbst findet
+man unter dem Reiter WooCommerce als letzten Punkt.</p>
+<p><strong>[Rechtliche Funktionen]{.underline}</strong></p>
+<p>Für die Einhaltung der deutschen und europäischen Datenschutz- und
+E-Commerce-Anforderungen, wurden mehrere rechtliche Erweiterungen
+installiert.</p>
+<p>Das Plugin „Germanized für WooCommerce" ergänzt den Shop um rechtlich
+notwendige Funktionen wie Lieferzeitangaben, Steuerhinweise,
+Widerrufsinformationen und Pflichtangaben im Bestellprozess. Auch
+übernimmt es die Steuerberechnung oder auch rechtlich Relevante Seiten
+wie AGBs.</p>
+<p><img alt="" src="media/image37.png" />{width="6.268055555555556in"
+height="3.4916666666666667in"}</p>
+<p><img alt="" src="media/image38.png" />{width="6.268055555555556in"
+height="3.3583333333333334in"}</p>
+<p>Germanized ist ein sehr vielfältiges Plugin, welches viele Funktionen
+mit sich bringt. Auch hat es intrigiert, dass SEPA-Lastschriftverfahren
+und auf Rechnung als Zahlungsoptionen freigeschalten werden. Diese kann
+man dann in den WooCommerce Einstellungen unter Zahlungen aktivieren und
+bearbeiten.</p>
+<p><img alt="" src="media/image39.png" />{width="6.268055555555556in"
+height="3.3493055555555555in"}</p>
+<p>Zusätzlich verwaltet „Complianz" die Cookie-Einwilligungen der Besucher.
+Beim ersten Besuch der Webseite wird automatisch ein Cookie-Banner
+angezeigt. Besucher können dort selbst entscheiden, welche Arten von
+Cookies gespeichert werden dürfen.</p>
+<p><img alt="" src="media/image40.png" />{width="6.268055555555556in" height="3.33125in"}</p>
+<p>Über den Assistenten kann man seine wichtigsten Einstellungen schnell
+und einfach tätigen bezüglich des Banners. Der Assistent führt einen
+durch die gesamten Themen, sodass der Shop Besitzer wenig auffand
+betreiben muss.</p>
+<p><img alt="" src="media/image41.png" />{width="6.268055555555556in"
+height="3.339583333333333in"}</p>
+<p>Über den Reiter Einwilligungsbanner können Einstellungen und Aussehen
+des Banners nach belieben verändert und angepasst werden.</p>
+<p><img alt="" src="media/image42.png" />{width="6.268055555555556in"
+height="3.3159722222222223in"}</p>
+<p>Außerdem stellt Complianz unter dem Reiter Werkzeuge auf der linken
+Seite, welches sich unter den Punkten Benutzer und Plugins befindet,
+Allgemeine Geschäftsbedingungen zur Verfügung. Wobei man auch hier durch
+einen Assistenten durchgeführt wird und am Ende eine Seite zu den
+Allgemeinen Geschäftsbedingungen automatisch erstellt.</p>
+<p><img alt="" src="media/image43.png" />{width="6.268055555555556in" height="3.35in"}</p>
+<p>Die Inhalte der Datenschutzerklärung, der Allgemeinen
+Geschäftsbedingungen und weiterer Rechtstexte können unter Seiten
+angepasst werden. Viele Seiten wie Impressum, Widerrufsbelehrung oder
+ähnliches muss man selber erstellen, da diese von den Plugins nur mit
+der Pro Version erstellt werden.</p>
+<p><strong>[Zahlungsoptionen]{.underline}</strong></p>
+<p>Die verschiedenen Zahlungsoptionen kann im Menüpunkt Zahlungen unter
+WooCommerce gefunden werden. Dabei können einzelne Zahlungsoptionen
+aktiviert und eingerichtet werden.</p>
+<p><img alt="" src="media/image39.png" />{width="6.268055555555556in"
+height="3.3493055555555555in"}</p>
+<p><strong>[Formulare]{.underline}</strong></p>
+<p>Über WPForms können Formulare erstellt, gelöscht und bearbeitet werden.
+Diese Formulare ermöglichen es Besuchern, Anfragen direkt über die
+Webseite zu senden.</p>
+<p><img alt="" src="media/image44.png" />{width="6.268055555555556in"
+height="3.3666666666666667in"}</p>
+<p>Neue Formulare können über eine grafische Oberfläche erstellt werden.
+Felder wie Name, E-Mail-Adresse, Telefonnummer oder Freitext lassen sich
+per Drag-and-Drop hinzufügen. Durch die Erweiterung „Ultimate Kit for
+WPForms" stehen zusätzliche Gestaltungsmöglichkeiten zur Verfügung,
+sodass Formulare optisch an das Design des Shops angepasst werden
+können.</p>
+<p><img alt="" src="media/image45.png" />{width="6.268055555555556in"
+height="3.173611111111111in"}</p>
+<p><img alt="" src="media/image46.png" />{width="6.268055555555556in"
+height="3.3041666666666667in"}</p>
+<p>Auch kann man sich vorgefertigte Formulare aus einem Pool durch WPForms
+aussuchen und nutzen.</p>
+<p><img alt="" src="media/image47.png" />{width="6.268055555555556in"
+height="3.3131944444444446in"}</p>
+<p>WPForms erstellt lediglich die Formulare aber keine Seiten dafür. Das
+heißt, dass die Formulare auf bestimmten Seiten extra eingebunden werden
+müssen.</p>
+<p><strong>[Design und Layoutanpassungen]{.underline}</strong></p>
+<p>Das Erscheinungsbild des Webshops kann über die
+WordPress-Anpassungsfunktionen verändert werden. Dabei wird der
+Standard-Blockeditor von WordPress zur Verfügung gestellt. Dazu gibt es
+im WordPress-Menü auf der linken Seite den Reiter Designs.</p>
+<p><img alt="" src="media/image48.png" />{width="6.268055555555556in"
+height="3.342361111111111in"}</p>
+<p>Über Designs kann man sich Themes anzeigen lassen und auch neue
+hinzufügen. WooCommerce, bzw. WordPress hat dabei schon einen großen
+Pool an verschiedenen Themes. Will man jedoch noch mehr Möglichkeiten
+haben, so kann man sich das Plugin Astra oder Starter Templates
+installieren und aktivieren.</p>
+<p>Ist man im Reiter Designs, so kann man auf Anpassen bei dem aktuell
+aktivierte Theme drücken. Hier gibt es dann die Möglichkeit bestimmte
+Details des Themes anzupassen. Unteranderem kann man Menüs hinzufügen,
+den Footer bearbeiten, eine andere Homepage setzen oder das Titelbild
+ändern. Die Grenzen hierbei sind jedoch, dass man nicht viel Spielraum
+hat, da man nur das Theme begrenzt anpassen kann.</p>
+<p><img alt="" src="media/image49.png" />{width="6.268055555555556in"
+height="3.3027777777777776in"}</p>
+<p>Möchte man auch hier wieder bestimmte Seiten anpassen, wie unteranderem
+die Shop-Seite oder Account-Seite, so muss man sich extra Plugins
+installieren, wie z.B. Elementor. Dabei sei aber gesagt das für solche
+Plugins mit Veränderungen für Artikelseiten oder Accountseiten ein Abo
+benötigt wird.</p>
+<p>Um weitere Seiten hinzuzufügen, muss man im Reiter links nach oben gehen
+und auf „Seiten" drücken.</p>
+<p><img alt="" src="media/image50.png" />{width="6.268055555555556in"
+height="3.3472222222222223in"}</p>
+<p>Ist man bei dem Reiter Seiten, so kann man bereits erstellte Seiten
+bearbeiten, löschen oder auch neue Hinzufügen.</p>
+<p>Hat man sich nun entschieden eine neue Seite hinzuzufügen, so muss oben
+auf „Seite hinzufügen" gedrückt werden. In der Seitenansicht kann man
+links oben im Menü auswählen, was man gerne einfügen möchte. Dieses Menü
+kann über dem Plus oben links geöffnet und geschlossen werden. Auch kann
+man sich Vorlagen anschauen und diese hinzufügen. Des Weiteren kann man
+hier z.b. das Formular, welches man erstellt hat, einbinden.</p>
+<p><img alt="" src="media/image51.png" />{width="6.268055555555556in" height="3.30625in"}</p>
+<p><strong>[Warenkorb]{.underline}</strong></p>
+<p>Das Plugin „Seitlicher WooCommerce-Warenkorb" sorgt dafür, dass man auf
+der Seite rechts oder links ein Button hat, worüber man einen Überblick
+bekommt, welche Produkte man bereits in seinem Warenkorb hat und diese
+auch schnell bearbeiten kann.</p>
+<p><img alt="" src="media/image52.png" />{width="6.268055555555556in"
+height="3.3847222222222224in"}</p>
+<p>Zudem bietet das Plugin auch verschiedene Styling- und
+Anpassungsoptionen für den kleinen Einkaufswagen an, sodass man ihn
+beliebig verändern kann.</p>
+<p><img alt="" src="media/image53.png" />{width="6.268055555555556in"
+height="3.3409722222222222in"}</p>
+<p><strong>[Account Delete]{.underline}</strong></p>
+<p>Das Plugin „WP Frontend Delete Account" ist dazu da, dass Benutzer ihre
+Accounts einfach und komfortable löschen können, ohne sich mit den
+Besitzern der Website in Verbindung zu setzen.</p>
+<p><strong>[E-Mails]{.underline}</strong></p>
+<p>Das Plugin <strong>WP Mail SMTP</strong> löst Probleme bei der Zustellung von E-Mails
+und läuft über Provider wie GMAIL, Bravo oder auch SMTP.de.</p>
+<p><img alt="" src="media/image54.png" />{width="6.268055555555556in"
+height="3.3354166666666667in"}</p>
+<p>Zudem kann man sich das Plugin <strong>WP Mail Logging</strong> herunterladen, sodass
+man schauen kann, ob alle E-Mails versendet werden oder es Probleme
+gibt.</p>
+<p><img alt="" src="media/image55.png" />{width="6.268055555555556in" height="3.38125in"}</p>
+<p>Um E-Mails, die durch WooCommerce am Ende versendet werden anzupassen,
+muss man in den WooCommerce Einstellungen in den Punkt E-Mails gehen.</p>
+<p><img alt="" src="media/image56.png" />{width="6.268055555555556in"
+height="3.3493055555555555in"}</p>
+<p><strong>[Sicherheit des Shops]{.underline}</strong></p>
+<p>Zum Schutz des Webshops wurde Wordfence Security installiert. Die
+Erweiterung überwacht die Webseite kontinuierlich auf verdächtige
+Aktivitäten und schützt vor typischen Angriffen auf WordPress-Webseiten.</p>
+<p><img alt="" src="media/image57.png" />{width="6.268055555555556in"
+height="3.3402777777777777in"}</p>
+<p>Wordfence verfügt über eine integrierte Firewall, die schädliche
+Zugriffe blockieren kann. Zusätzlich werden regelmäßige
+Sicherheitsprüfungen durchgeführt, um veränderte Dateien oder bekannte
+Schadsoftware frühzeitig zu erkennen. Auch kann man hier Login Security
+aktivieren wie Captcha oder 2FA. Das dient auch vorranging zum Schutz
+der Kundendaten und -konten.</p>
+<p><img alt="" src="media/image58.png" />{width="6.268055555555556in"
+height="3.3472222222222223in"}</p>
+<p>Im Dashboard von Wordfence können Sicherheitsmeldungen eingesehen und
+empfohlene Maßnahmen direkt umgesetzt werden.</p>
+<p><strong>Sicherheitsaspekte</strong></p>
+<p>Thema Sicherheit betrifft jeden Webshop, der öffentlich zugänglich ist.
+Insbesondere E-Commerce Seiten, die mit Vertrauenswürdigen Daten
+Arbeiten, brauchen Sicherheit, um Daten wie Kundeninformationen,
+Adressen oder Kontoinformationen zu schützen.</p>
+<p>Ein grundlegender Bestandteil der durchgeführten Sicherheitsmaßnahmen
+ist die Verwendung eines <strong>SSL-Zertifikates</strong>. Dadurch wird die
+Kommunikation zwischen Browser und Nutzer geschützt und verhindert das
+vertrauliche Daten oder Informationen in Klartext abgefangen werden
+können.</p>
+<p>Zu sehen ist das an der Verbindung, die über HTTPS erfolgt und das durch
+ein Schlosssymbol in der Adressleiste gekennzeichnet wird.</p>
+<p>Auf WordPress kommt, wie in den Funktionen beschrieben, dass
+Sicherheitsplugin <strong>Wordfence</strong> für WordPress zum Einsatz. Dieses
+schützt insbesondere vor automatisierten Brute-Force-Angriffen, bei
+denen versucht wird, durch wiederholtes Ausprobieren von Passwörtern
+Zugriff auf den Administrationsbereich zu erhalten. Verdächtige
+Aktivitäten werden erkannt und entsprechende Zugriffe automatisch
+blockiert. Zusätzlich verfügt das Plugin über eine integrierte Firewall,
+die schädliche Anfragen frühzeitig filtert, sowie über Funktionen zur
+regelmäßigen Überprüfung des Systems auf Malware und manipulierte
+Dateien. Auch bittet es 2 Faktor Authentifizierung an, um sein
+Benutzerkonto besser schützen zu können oder Captchas, um Bots
+fernzuhalten.</p>
+<p>Auch auf dem Server/der VM wurden gezielte Sicherheitsmaßnahmen
+umgesetzt. Die Firewall des Servers/VM ist so konfiguriert, dass
+ausschließlich notwendige Verbindungen zugelassen werden. Dazu zählen
+der SSH-Zugang zur VM/zum Server sowie die Ports 80 und 443 für den
+regulären Webverkehr über HTTP und HTTPS. Alle weiteren Ports bleiben
+geschlossen, um potenzielle Angriffsflächen zu minimieren. Auch wurde
+die Weiterleitung von HTTP zu HTTPS konfiguriert, sodass man nur auf
+geschützten Seiten unterwegs ist.</p>
+<p><strong>[API]{.underline}</strong></p>
+<p>Die gleich beschriebene API wurde unter zur Hilfenahme von Künstlicher
+Intelligenz entwickelt. Dabei kam die KI ausschließlich unterstützend
+bei Fragen oder Problemen zum Einsatz, um eine schnelle Problemlösung zu
+finden. Sie galt dementsprechend als Inspiration und Wissensquelle.</p>
+<p>Das entwickelte Plugin nutzt die WooCommerce Rest API unseres
+Hauptshops. Dabei werden die Bestelldaten automatisch abgerufen und in
+das Academy-WordPress übertragen. Ziel dieser Schnittstelle ist es, dass
+nach dem erfolgten Kauf des XYZ-Academy-Zugangs über den Hauptshop, der
+Kunde Zugang zur Academy Seite erhält, sodass ein automatischer
+Onboarding-Prozess entsteht und der Academy Shop Zugänge über andere
+Shops, verkaufen kann.</p>
+<p>Der Zugriff auf die WooCommerce API erfolgt über den Endpoint
+<strong>/wp-json/wc/v3/orders</strong> des Hauptshops. Über diesen Endpoint werden
+die Bestellungen im JSON-Format abgerufen. Der gesamte Aufruf erfolgt
+als HTTP-GET Request. Sodass der Request erfolgreich ist, wurden der
+Consumer Key und das Consumer Secret beim Request mitgegeben, um die
+Anfrage zu authentifizieren. Diese Daten werden über HTTP Basic
+Authentication im Header des Requestes angegeben.</p>
+<p><strong>\'headers\' =&gt; [</strong></p>
+<p><strong>\'Authorization\' =&gt; \'Basic \' . base64_encode(\$xyz_consumer_key .
+\':\' . \$xyz_consumer_secret)</strong></p>
+<p><strong>],</strong></p>
+<p>Die erstellen Consumer Key und Secret wurden über die Rest API erst
+erstellt und mit Leserechten bestückt und danach in unserer API am
+Anfang eingefügt, sodass wir sie später nur aufrufen brauchen.</p>
+<p>Bei der Ausführung des Requests beschränken wir zudem durch einen
+weiteren Parameter die Anzahl der Bestellungen, die wir zurückbekommen.
+Hierbei lautet der Parameter „completed", da nur abgeschlossene
+Bestellungen und Zahlungen für uns von Wichtigkeit sind.</p>
+<p>Hierzu sieht der die API-URL wie folgt aus:</p>
+<p><a href="https://fbw-lab3.th-brandenburg.de/wp-json/wc/v3/orders?status=completed&amp;per_page=100"><strong>https://fbw-lab3.th-brandenburg.de/wp-json/wc/v3/orders?status=completed&amp;per_page=100</strong></a></p>
+<p>Da die Antwort der API wie bereits geschildert als JSON-Format zurück
+kommt, können wir dieser Antwort Informationen zu den einzelnen
+Bestellungen entnehmen und/oder prüfen. Beim Auswerten der Informationen
+durchläuft das Plugin iterativ alle Bestellungen und prüft ob die
+<strong>product_id</strong> mit der zuvor festgelegten Produkt-ID übereinstimmen.</p>
+<p><strong>\$xyz_academy_product_id = 2616;</strong></p>
+<p>Diese ID ist ausschlaggeben, um den Zugang zur Academy zu gewährleisten.
+Nur Treffer nach der Überprüfung werden weitergenutzt, während die
+anderen Bestellungen ignoriert werden.</p>
+<p>Wurde also der passende Kauf gefunden, werden Kundendaten aus dem
+JSON-Format extrahiert. Wichtig sind hierbei die E-Mail-Adresse sowie
+Vor- und Nachname. Diese Daten werden verwendet, um einen neuen Nutzer
+im System anzulegen, auf den der Kunde dann später zugriefen kann. Wird
+danach versucht das Kundenkonto anzulegen, so wird zuerst geprüft, ob
+der Account bereits existiert, sodass nicht doppelte Accounts vorhanden
+sind.</p>
+<p><strong>\$existing_user = get_user_by(\'email\', \$email);</strong></p>
+<p><strong>if (\$existing_user) {</strong></p>
+<p><strong>if (\$debug) {</strong></p>
+<p><strong>echo \'\&lt;p style=\"color:orange;\"&gt;User existiert bereits: \' .
+esc_html(\$email) . \'\&lt;/p&gt;\';</strong></p>
+<p><strong>}</strong></p>
+<p><strong>return \$existing_user-&gt;ID;</strong></p>
+<p><strong>}</strong></p>
+<p>Falls kein Kundenkonto existiert, so wird ein Username, basierend auf
+der E-Mail erstellt und ein Passwort generiert. Anschließend wird über
+die WordPress Funktion das Konto erstellt.</p>
+<p><strong>\$user_id = wp_create_user(\$username, \$password, \$email);</strong></p>
+<p>Im Anschluss daran, wird dem Benutzer eine E-Mail zugesendet, welches
+die Zugangsdaten zur Academy beinhaltet. Der Versand erfolgt über die
+interne WordPress Mailfunktion und stellt damit unmittelbar nach dem
+Kauf sicher, dass der Kunde Zugriff auf die Website hat.</p>
+<p>Um eine schnelle und einfache Synchronisation zu gewährleisten haben wir
+einen Cronjob, welcher im Intervall von 5 Minuten die API-Abfrage
+durchführt, um ständig auf neue Bestellungen zu lauschen.</p>
+<p><strong>add_filter(\'cron_schedules\', function (\$schedules) {</strong></p>
+<p><strong>\$schedules[\'every_five_minutes\'] = [</strong></p>
+<p><strong>\'interval\' =&gt; 300,</strong></p>
+<p><strong>\'display\' =&gt; \'Alle 5 Minuten\'</strong></p>
+<p><strong>];</strong></p>
+<p><strong>return \$schedules;</strong></p>
+<p><strong>});</strong></p>
+<p>Dieser Cronjob wird sowohl beim Aktivieren des Plugins automatisch
+gestartet als auch beim Deaktivieren automatisch verworfen. Zusätzlich
+ist im WordPress Dashboard in der Leiste links unten ein Abschnitt für
+das Plugin, sodass man eigenständig die Synchronisation, also die
+API-Abfrage ausführen kann.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
