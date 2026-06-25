@@ -35,7 +35,7 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li class="nav-item">
-                                <a href="." class="nav-link active" aria-current="page">Welcome to MkDocs</a>
+                                <a href="." class="nav-link active" aria-current="page">Installationsanleitung</a>
                             </li>
                             <li class="nav-item">
                                 <a href="Installationsanleitung/" class="nav-link">Installationsanleitung</a>
@@ -76,16 +76,8 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#welcome-to-mkdocs" class="nav-link">Welcome to MkDocs</a>
+            <li class="nav-item" data-bs-level="1"><a href="#installationsanleitung" class="nav-link">Installationsanleitung</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#commands" class="nav-link">Commands</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#project-layout" class="nav-link">Project layout</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
               </ul>
             </li>
         </ul>
@@ -93,21 +85,28 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
-<ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
-</ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre></div>
+<h1 id="installationsanleitung">Installationsanleitung</h1>
+<p>Zur Installation von dem CMS WordPress auf einer VM oder einem Server, sollte bevorzugt Ubuntu, 
+Linux oder Debian als Betriebssystem laufen. Um mit der Einrichtung zu starten, verbindet man sich per SSH mit dem Server. 
+Für die Verbindung sollte man den Root-User oder einen Benutzer mit root-Rechten nutzen. Die Verbindung baut 
+man über folgenden Befehl auf:</p>
+<p><code>ssh benutzer@server_ip</code></p>
+<p>Nach dem erfolgreichen Verbinden mit dem Server, sollte zuerst das System aktualisiert werden. 
+Dies wird gemacht, um sicherzustellen, dass alle Pakete auf dem neusten Stand sind:</p>
+<p><code>sudo apt-get update</code>
+<code>sudo apt-get upgrade -y</code></p>
+<p>Im nächsten Schritt werden alle benötigten Pakete installiert. Dazu gehören der Webserver
+„Apache“, die Datenbank „MariaDB“ sowie PHP und alle für WordPress notwendigen PHP-
+Erweiterungen. Diese bilden die technische Grundlage für die Anwendung:</p>
+<p><code>sudo apt install apache2 mariadb-server php php-mysql libpache2-mod-php php-cli php-curl php-
+xml php-mbstring php-zip unzip curl -y</code></p>
+<p>Nachdem diese Installation durchgelaufen ist, kann sowohl der Webserver als auch die Datenbank, 
+bzw. der Datenbankserver gestartet werden. Hierbei aktiveren wir gleich, dass diese beim 
+Systemstart automatischen starten und mitlaufen:</p>
+<p><code>sudo systemctl enable apache2</code></p>
+<p><code>sudo systemctl start apache2</code></p>
+<p><code>sudo systemctl enable mariadb</code></p>
+<p><code>sudo systemctl start mariadb</code></p></div>
             </div>
         </div>
 
@@ -189,5 +188,5 @@ docs/
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-06-25 13:40:15.846898+00:00
+Build Date UTC : 2026-06-25 13:51:56.879974+00:00
 -->
