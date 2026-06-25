@@ -106,6 +106,7 @@
 <h1 id="intro">Intro</h1>
 <p>Die Dokumentation wurde auf 3 Seiten verteilt.
 Jede Seite ist über oben rechts dem Pfeil erreichbar oder auch oben in der Navigationsliste.</p>
+<p>Gruppe: Rieke Meißner, Max Kimmel, Vincent Lamprecht, Jakob Gröhst</p>
 <p>Jedes Gruppenmitglied hat zu gleichen Anteilen an der Erarbeitung beigetragen. Da Rieke nicht vorträgt hat sie mehr Arbeit in der Dokumentation übernommen, sodass alles wieder ausgeglichen ist.
 Die lebendige Dokumentation ist unter dem Link https://lampichen.github.io zu erreichen.</p>
 <h1 id="installationsanleitung">Installationsanleitung</h1>
@@ -177,13 +178,14 @@ wurde. Dazu öffnet man die Konfigurationsdatei vom Apache Webserver:</p>
 WordPress-Verzeichnis als Root-Verzeichnis gesetzt werden. Wenn wie
 beschrieben WordPress in /var/www/html installiert wurde, muss das
 Root-Verzeichnis nicht mehr gesetzt werden:</p>
-<p><strong><VirtualHost \*:80>\
-    serverName ihre-domain.de\
-    DocumentRoot /var/www/html\
-\
-    ErrorLog \${APACHE_LOG_DIR}/error.log\
-    CustomLog \${APACHE_LOG_DIR}/access.log combined\
-\&lt;/VirtualHost&gt;</strong></p>
+<p>**<VirtualHost \*:80></p>
+<pre><code>serverName ihre-domain.de\
+DocumentRoot /var/www/html\
+
+ErrorLog \${APACHE_LOG_DIR}/error.log\
+CustomLog \${APACHE_LOG_DIR}/access.log combined\
+</code></pre>
+<p>&lt;/VirtualHost&gt;**</p>
 <p>Anschließend muss der Apache Server neu geladen werden um gemachte
 Änderungen zu speichern und zu laden:</p>
 <p><strong>sudo systemctl reload apache2</strong></p>
@@ -191,16 +193,16 @@ Root-Verzeichnis nicht mehr gesetzt werden:</p>
 verbinden. Sollte die Wordpress-Anmeldeseite auftauchen, so hat das
 html-Verzeichnis die bereits benötigten Rechte. Sollte dies jedoch nicht
 der Fall sein, so werden anschließend die Dateirechte angepasst:</p>
-<p><strong>sudo chown -R www-data:www-data /var/www/html\
-sudo chmod -R 755 /var/www/html</strong></p>
+<p><strong>sudo chown -R www-data:www-data /var/www/html</strong></p>
+<p><strong>sudo chmod -R 755 /var/www/html</strong></p>
 <p>Damit Wordpress von außen erreichbar ist, müssen die benötigten
 Netzwerkports auf dem Server oder der VM freigegeben werden. Zum einen
 müssen SSH-Zugriff erlaubt werden, um die Verbindung zum Server/VM nicht
 zu verlieren von man die Firewall aktiviert. Zudem müssen die Ports 80
 und 443 freigegeben werden.</p>
 <p>Für Ubuntu Server ist der Befehl:</p>
-<p><strong>sudo ufw allow OpenSSH\
-sudo ufw allow \'Apache Full\'</strong></p>
+<p><strong>sudo ufw allow OpenSSH</strong></p>
+<p><strong>sudo ufw allow \'Apache Full\'</strong></p>
 <p><strong>sudo ufw enable</strong></p>
 <p>Danach kann man den Status der Firewall überprüfen, indem man <strong>sudo</strong>
 <strong>ufw status</strong> eingibt.</p>
@@ -229,14 +231,14 @@ wird, beispielsweise:</p>
 <p><strong>Common Name (CN): meine-domain.de</strong></p>
 <p>Nach erfolgreicher Erstellung befinden sich die beiden Dateien im
 Verzeichnis:</p>
-<p><strong>/etc/ssl/certs/webshop.crt\
-/etc/ssl/private/webshop.key</strong></p>
+<p><strong>/etc/ssl/certs/webshop.crt</strong></p>
+<p><strong>/etc/ssl/private/webshop.key</strong></p>
 <p>Der private Schlüssel sollte zudem ausschließlich für Root lesbar sein,
 weshalb wir diesen nochmal schützen müssen:</p>
 <p><strong>sudo chmod 600 /etc/ssl/private/webshop.key</strong></p>
 <p>Nun wird das SSL-Modul von Apache aktiviert:</p>
-<p><strong>sudo a2enmod ssl\
-sudo a2enmod rewrite</strong></p>
+<p><strong>sudo a2enmod ssl</strong></p>
+<p><strong>sudo a2enmod rewrite</strong></p>
 <p>Anschließend wird die SSL-Konfiguration angepasst:</p>
 <p><strong>sudo nano /etc/apache2/sites-available/default-ssl.conf</strong></p>
 <p>Der nachfolgende Teil sollte in der <strong>default-ssl.conf</strong> vorhanden sein.
@@ -264,11 +266,11 @@ aktivieren wir auch die gerade angepasste Datei:</p>
 <p>Um nun Besucher automatisch von http auf HTTPS umzuleiten, muss
 zusätzlich die Konfiguration unter Port 80 angepasst werden:</p>
 <p><strong>sudo nano /etc/apache2/sites-available/000-default.conf</strong></p>
-<p><strong>\&lt;VirtualHost *:80&gt;\
+<p><code>\&lt;VirtualHost \*:80\&gt;\
 ServerName meine-domain.de\
 \
 Redirect permanent / https://meine-domain.de/ \
-\&lt;/VirtualHost&gt;</strong></p>
+\&lt;/VirtualHost\&gt;**</code></p>
 <p>Danach überprüfen wir die Konfiguration auf ihren Syntax. Dabei sollte
 die Meldung <strong>Syntax OK</strong> kommen:</p>
 <p><strong>sudo apache2ctl configtest</strong></p>
@@ -402,5 +404,5 @@ konfiguriert werden.</p></div>
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-06-25 17:50:18.466021+00:00
+Build Date UTC : 2026-06-25 18:11:29.664330+00:00
 -->
